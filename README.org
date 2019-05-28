@@ -1,0 +1,3 @@
+* TI MSP430 User Library
+
+A namespace-oriented wrapper library for using the TI MSP430.
