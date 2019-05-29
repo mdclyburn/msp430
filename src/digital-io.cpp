@@ -51,20 +51,30 @@ namespace mardev
             };
             #endif
 
-            void set_input(const uint8_t pin_number, const uint8_t pull)
+            void set_pin_mode(const uint8_t pin_number,
+                              const pin_mode mode)
             {
                 const uint8_t port = pin_port[pin_number];
                 const uint8_t port_mask = pin_port_mask[pin_number];
 
-                *port_direction[port] &= ~port_mask;
-                *port_resistor_enable[port] |= port_mask;
+                // Set input or output.
+                if(mode == pin_mode::output)
+                    *port_direction[port] |= port_mask;
+                else
+                    *port_direction[port] &= ~port_mask;
+
+                // Enable the internal resistor.
+                if(mode != pin_mode::output)
+                    *port_resistor_enable[port] |= port_mask;
+
+                // Select the digital IO function.
                 *port_select[port] &= ~port_mask;
                 *port_select_2[port] &= ~port_mask;
 
-                // Set pull-up or pull-down.
-                if(pull != 0)
+                // Set output value.
+                if(mode == pin_mode::input_pullup)
                     *port_output[port] |= port_mask;
-                else
+                else // Pull-down or set output to low.
                     *port_output[port] &= ~port_mask;
 
                 return;
