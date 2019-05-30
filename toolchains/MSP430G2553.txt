@@ -1,0 +1,19 @@
+# -*- cmake -*-
+
+set(MSP430PATH "/opt/energia/hardware/tools/msp430/bin")
+set(MSP430TARGET "msp430g2553")
+
+string(TOUPPER ${MSP430TARGET} TARGETUPPER)
+
+set(CMAKE_C_COMPILER "${MSP430PATH}/msp430-gcc")
+set(CMAKE_C_FLAGS "-Os -Wall -Werror -ffunction-sections -fdata-sections -mmcu=${MSP430TARGET} -DMDL_${TARGETUPPER}")
+
+set(CMAKE_CXX_COMPILER "${MSP430PATH}/msp430-g++")
+set(CMAKE_CXX_FLAGS "-nostdlib -std=c++0x -Os -Wall -Werror -ffunction-sections -fdata-sections -mmcu=${MSP430TARGET} -DMDL_${TARGETUPPER}")
+
+set(CMAKE_EXE_LINKER_FLAGS "-gc-sections -u")
+
+set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)

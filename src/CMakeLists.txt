@@ -1,12 +1,6 @@
 cmake_minimum_required(VERSION 2.8.11)
 
-# set(CMAKE_VERBOSE_MAKEFILE TRUE)
-set(TARGET "")
-
-set(TARGET "$ENV{MSP430TARGET}")
-if(NOT TARGET)
-  message(FATAL_ERROR "Set a target with the MSP430TARGET environment or CMake variable.")
-endif()
+set(CMAKE_VERBOSE_MAKEFILE TRUE)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
