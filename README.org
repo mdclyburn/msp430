@@ -1,3 +1,12 @@
 * TI MSP430 User Library
 
 A namespace-oriented wrapper library for using the TI MSP430.
+
+** Building
+
+Find a suitable toolchain file in the toolchain directory.
+Edit it if necessary.
+
+Create a build directory inside the src directory.
+
+~cmake -DCMAKE_TOOLCHAIN_FILE=../toolchains/MSP430G2553.txt .. && make~
