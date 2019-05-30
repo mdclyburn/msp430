@@ -79,6 +79,22 @@ namespace mardev
 
                 return;
             }
+
+            bool read(const uint8_t pin_number)
+            {
+                return *port_input[pin_port[pin_number]] &= pin_port_mask[pin_number];
+            }
+
+            void write(const uint8_t pin_number,
+                       const logic level)
+            {
+                if(level == logic::high)
+                    *port_output[pin_port[pin_number]] |= pin_port_mask[pin_number];
+                else
+                    *port_output[pin_port[pin_number]] &= ~pin_port_mask[pin_number];
+
+                return;
+            }
         }
     }
 }
