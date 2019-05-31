@@ -1,4 +1,5 @@
 #include "digital-io.h"
+#include "registers.h"
 
 namespace mardev
 {
@@ -6,24 +7,26 @@ namespace mardev
     {
         namespace digital_io
         {
-            // Pin number to IO port.
-            // 0 = pin is not attached to a digital IO port.
-            #ifdef MDL_MSP430G2553
-            uint8_t* const port_input[]            = { (uint8_t* const) 0x20, (uint8_t* const) 0x28 };
-            uint8_t* const port_output[]           = { (uint8_t* const) 0x21, (uint8_t* const) 0x29 };
-            uint8_t* const port_direction[]        = { (uint8_t* const) 0x22, (uint8_t* const) 0x2A };
-            uint8_t* const port_interrupt_flag[]   = { (uint8_t* const) 0x23, (uint8_t* const) 0x2B };
-            uint8_t* const port_interrupt_edge[]   = { (uint8_t* const) 0x24, (uint8_t* const) 0x2C };
-            uint8_t* const port_interrupt_enable[] = { (uint8_t* const) 0x25, (uint8_t* const) 0x2D };
-            uint8_t* const port_select[]           = { (uint8_t* const) 0x26, (uint8_t* const) 0x2E };
-            uint8_t* const port_select_2[]         = { (uint8_t* const) 0x41, (uint8_t* const) 0x42 };
-            uint8_t* const port_resistor_enable[]  = { (uint8_t* const) 0x27, (uint8_t* const) 0x2F };
+            namespace reg = mardev::msp430::reg;
 
+            // Pin number to IO port.
+            uint16_t* const port_input[]            = { reg::P1IN,   reg::P2IN };
+            uint16_t* const port_output[]           = { reg::P1OUT,  reg::P2OUT };
+            uint16_t* const port_direction[]        = { reg::P1DIR,  reg::P2DIR };
+            uint16_t* const port_interrupt_flag[]   = { reg::P1IFG,  reg::P2IFG };
+            uint16_t* const port_interrupt_edge[]   = { reg::P1IES,  reg::P2IES };
+            uint16_t* const port_interrupt_enable[] = { reg::P1IE,   reg::P2IES };
+            uint16_t* const port_select[]           = { reg::P1SEL,  reg::P2SEL };
+            uint16_t* const port_select_2[]         = { reg::P1SEL2, reg::P2SEL2 };
+            uint16_t* const port_resistor_enable[]  = { reg::P1REN,  reg::P2REN };
+
+            // 0 = pin is not attached to a digital IO port.
             const uint8_t pin_port[] = {
                 0, 1, 1, 1, 1, 1, 1, 2, 2, 2,
                 2, 2, 2, 1, 1, 0, 0, 2, 2, 0
             };
 
+            // 0 = pin is not attached to a digital IO port.
             const uint8_t pin_port_mask[] = {
                 0,
                 1 << 0,
@@ -47,7 +50,6 @@ namespace mardev
                 1 << 6,
                 0
             };
-            #endif
 
             void set_pin_mode(const uint8_t pin_number,
                               const pin_mode mode)

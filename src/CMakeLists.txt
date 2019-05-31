@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8.11)
 
-set(CMAKE_VERBOSE_MAKEFILE TRUE)
+#set(CMAKE_VERBOSE_MAKEFILE TRUE)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
@@ -21,6 +21,7 @@ macro(add_sources SOURCES)
 endmacro()
 
 set(MSP430_SOURCES
-  digital-io.cpp)
+  digital-io.cpp
+  watchdog.cpp)
 
 add_library(mdlmsp430 STATIC ${MSP430_SOURCES})
