@@ -1,5 +1,4 @@
 #include "digital-io.h"
-#include "registers.h"
 
 namespace mardev
 {
