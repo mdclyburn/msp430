@@ -7,18 +7,16 @@ namespace mardev
     {
         namespace digital_io
         {
-            namespace reg = mardev::msp430::reg;
-
             // Pin number to IO port.
-            volatile uint8_t* const port_input[]            = { reg::P1IN,   reg::P2IN };
-            volatile uint8_t* const port_output[]           = { reg::P1OUT,  reg::P2OUT };
-            volatile uint8_t* const port_direction[]        = { reg::P1DIR,  reg::P2DIR };
-            volatile uint8_t* const port_interrupt_flag[]   = { reg::P1IFG,  reg::P2IFG };
-            volatile uint8_t* const port_interrupt_edge[]   = { reg::P1IES,  reg::P2IES };
-            volatile uint8_t* const port_interrupt_enable[] = { reg::P1IE,   reg::P2IES };
-            volatile uint8_t* const port_select[]           = { reg::P1SEL,  reg::P2SEL };
-            volatile uint8_t* const port_select_2[]         = { reg::P1SEL2, reg::P2SEL2 };
-            volatile uint8_t* const port_resistor_enable[]  = { reg::P1REN,  reg::P2REN };
+            volatile uint8_t* const port_input[]            = { registers::P1IN,   registers::P2IN };
+            volatile uint8_t* const port_output[]           = { registers::P1OUT,  registers::P2OUT };
+            volatile uint8_t* const port_direction[]        = { registers::P1DIR,  registers::P2DIR };
+            volatile uint8_t* const port_interrupt_flag[]   = { registers::P1IFG,  registers::P2IFG };
+            volatile uint8_t* const port_interrupt_edge[]   = { registers::P1IES,  registers::P2IES };
+            volatile uint8_t* const port_interrupt_enable[] = { registers::P1IE,   registers::P2IES };
+            volatile uint8_t* const port_select[]           = { registers::P1SEL,  registers::P2SEL };
+            volatile uint8_t* const port_select_2[]         = { registers::P1SEL2, registers::P2SEL2 };
+            volatile uint8_t* const port_resistor_enable[]  = { registers::P1REN,  registers::P2REN };
 
             // 0 = pin is not attached to a digital IO port.
             const uint8_t pin_port[] = {

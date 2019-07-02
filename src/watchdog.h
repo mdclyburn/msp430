@@ -3,15 +3,16 @@
 
 #include <stdint.h>
 
-#include "registers.h"
-
 namespace mardev
 {
     namespace msp430
     {
         namespace watchdog
         {
-            namespace reg = mardev::msp430::reg;
+            namespace registers
+            {
+                volatile uint16_t* const WDTCTL = (volatile uint16_t* const) 0x0120;
+            }
 
             const uint16_t WDTPW    = 0x5A00;
             const uint16_t WDTHOLD  = 0x0080;
@@ -27,9 +28,9 @@ namespace mardev
             const uint8_t WDTTIS8192  = 1;
             const uint8_t WDTTIS32768 = 0;
 
-            inline void disable() { *reg::WDTCTL = WDTPW | WDTHOLD; }
+            inline void disable() { *registers::WDTCTL = WDTPW | WDTHOLD; }
 
-            inline void enable_interval_mode() { *reg::WDTCTL = *reg::WDTCTL | WDTTMSEL; }
+            inline void enable_interval_mode() { *registers::WDTCTL = *registers::WDTCTL | WDTTMSEL; }
         }
     }
 }
