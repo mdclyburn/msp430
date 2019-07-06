@@ -1,11 +1,5 @@
 #include "watchdog.h"
 
-namespace mardev
+namespace mardev::msp430::watchdog
 {
-    namespace msp430
-    {
-        namespace watchdog
-        {
-        }
-    }
 }
