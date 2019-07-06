@@ -7,7 +7,7 @@ namespace mardev
         namespace timer
         {
             /** Capture/Compare value instance registers */
-            const uint16_t*[] CCV =
+            volatile uint16_t* const CCV[] =
             {
                 registers::TACCR0,
                 registers::TACCR1,
@@ -15,7 +15,7 @@ namespace mardev
             };
 
             /** Capture/Compare control instance registers */
-            const uint16_t*[] CCCTL =
+            volatile uint16_t* const CCCTL[] =
             {
                 registers::TACCTL0,
                 registers::TACCTL1,

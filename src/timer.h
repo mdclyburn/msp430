@@ -1,6 +1,8 @@
 #ifndef MDL_MSP430_TIMER_H
 #define MDL_MSP430_TIMER_H
 
+#include <stdint.h>
+
 namespace mardev
 {
     namespace msp430
@@ -119,7 +121,7 @@ namespace mardev
 
             /** Configure a capture/compare register.
              */
-            void configure_compare(const uint16_t instance,
+            void configure_compare(const uint8_t instance,
                                    const uint16_t count_max,
                                    const bool enable_interrupts);
         }
