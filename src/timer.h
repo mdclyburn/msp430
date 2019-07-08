@@ -57,12 +57,19 @@ namespace mardev::msp430::timer
         UpDown     = 3 << 4
     };
 
-    inline void initialize(const MC mode,
-                           const TASSEL source,
-                           const ID divider)
+    inline void start(const MC mode,
+                      const TASSEL source,
+                      const ID divider)
     {
-        *registers::TACTL &= ~(TASSELx | IDx | MCx)
-            | (uint16_t) mode | (uint16_t) source | (uint16_t) divider;
+        *registers::TACTL =
+            (uint16_t) mode
+            | (uint16_t) source
+            | (uint16_t) divider;
+    }
+
+    inline void stop()
+    {
+        *registers::TACTL |= TACLR;
     }
 
     inline void set_signal_source(const TASSEL s)
@@ -120,6 +127,10 @@ namespace mardev::msp430::timer
     void configure_compare(const uint8_t instance,
                            const uint16_t count_max,
                            const bool enable_interrupts);
+
+    /** Use TACCR0 to wait a specified amount of time.
+     */
+    void delay(const uint16_t milliseconds);
 }
 
 #endif

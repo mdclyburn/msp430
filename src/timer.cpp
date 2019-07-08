@@ -1,3 +1,4 @@
+#include "clock.h"
 #include "timer.h"
 
 namespace mardev::msp430::timer
@@ -26,8 +27,6 @@ namespace mardev::msp430::timer
         if(instance > 2)
             return;
 
-
-
         uint16_t settings =
             (uint16_t) CM::Disabled
             & ~CAP; // 0 = compare mode
@@ -36,6 +35,40 @@ namespace mardev::msp430::timer
             settings |= CCIE;
 
         *CCCTL[instance] = settings;
+
+        return;
+    }
+
+    void delay(const uint16_t milliseconds)
+    {
+        // TODO: disable interrupts
+
+        mardev::msp430::clock::set_auxiliary_source(
+            mardev::msp430::clock::lfxt1s::vlo_clock);
+        mardev::msp430::clock::set_auxiliary_divider(
+            mardev::msp430::clock::diva::d1);
+
+        *registers::TACCR0 = 65535;
+
+        uint16_t counted = 0;
+        while(counted <= milliseconds)
+        {
+            uint16_t ticks = 0;
+            if(milliseconds - counted < 1000)
+            {
+                ticks = 12 * (milliseconds - counted);
+            }
+            else
+            {
+                ticks = 12000;
+            }
+
+            start(MC::Up, TASSEL::ACLK, ID::d1);
+            while(*registers::TAR < ticks);
+            stop();
+
+            counted += ticks;
+        }
 
         return;
     }
