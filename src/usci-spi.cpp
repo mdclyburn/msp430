@@ -22,6 +22,9 @@ namespace mardev::msp430::usci::spi
             | (uint8_t) spi_mode
             | 1; // Synchronous mode enable
 
+        *ctl1 = (uint8_t) clock_source
+            | usci::UCSWRST;
+
         return;
     }
 }
