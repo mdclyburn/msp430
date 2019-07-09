@@ -5,10 +5,10 @@
 
 #include "usci.h"
 
-using namespace mardev::msp430::usci;
-
 namespace mardev::msp430::usci::spi
 {
+    namespace usci = mardev::msp430::usci;
+
     // USCI control register 0 masks for SPI
     const uint8_t _UCCKPH  = 0x80;
     const uint8_t _UCCKPL  = 0x40;
@@ -52,6 +52,14 @@ namespace mardev::msp430::usci::spi
         Master = 0x04
     };
 
+    /** Clock source select */
+    enum class UCSSELx : uint8_t
+    {
+        NA     = 0x00,
+        ACLK   = 0x40,
+        SMCLK  = 0x80
+    };
+
     /* initialize()
      * optionally set 3- or 4-pin mode?
      * set clock phase
@@ -62,6 +70,13 @@ namespace mardev::msp430::usci::spi
      * set clock
      * clear the software reset enable bit
      */
+    void initialize(const usci::Module module,
+                    const usci::UCMODE spi_mode,
+                    const UCSSELx clock_source,
+                    const UCCKPH clock_phase,
+                    const UCCKPL clock_polarity,
+                    const UCMSB first_bit,
+                    const UC7BIT character_length);
 }
 
 #endif

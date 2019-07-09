@@ -40,19 +40,19 @@ namespace mardev::msp430::usci
 
         // Buffers
         volatile const uint8_t* const UCB0RXBUF = (const uint8_t* const) 0x6E;
-        volatile uint8_t* const       UCA0TXBUF = (uint8_t* const) 0x6F;
+        volatile uint8_t* const       UCB0TXBUF = (uint8_t* const) 0x6F;
 
         // ===== Module-Register mapping
-        extern uint8_t* const CTL0[] =  { UCA0CTL0, UCB0CTL0 };
-        extern uint8_t* const CTL1[] =  { UCA0CTL1, UCB0CTL1 };
+        extern volatile uint8_t* const CTL0[] =  { UCA0CTL0, UCB0CTL0 };
+        extern volatile uint8_t* const CTL1[] =  { UCA0CTL1, UCB0CTL1 };
 
-        extern uint8_t* const BR0[]  =  { UCA0BR0, UCB0BR0 };
-        extern uint8_t* const BR1[]  =  { UCA0BR1, UCB0BR1 };
+        extern volatile uint8_t* const BR0[]  =  { UCA0BR0, UCB0BR0 };
+        extern volatile uint8_t* const BR1[]  =  { UCA0BR1, UCB0BR1 };
 
-        extern uint8_t* const STAT[] =  { UCA0STAT, UCB0STAT };
+        extern volatile uint8_t* const STAT[] =  { UCA0STAT, UCB0STAT };
 
-        extern uint8_t* const       RXBUF[] = { UCA0RXBUF, UCB0RXBUF };
-        extern const uint8_t* const TXBUF[] = { UCA0TXBUF, UCB0TXBUF };
+        extern volatile const uint8_t* const       RXBUF[] = { UCA0RXBUF, UCB0RXBUF };
+        extern volatile uint8_t* const TXBUF[] = { UCA0TXBUF, UCB0TXBUF };
     }
 
     // USCI control register 0 masks
