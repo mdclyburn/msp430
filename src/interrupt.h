@@ -1,7 +1,9 @@
-#ifndef MDL_MSP430_INTERRUPTS_H
-#define MDL_MSP430_INTERRUPTS_H
+#ifndef MDL_MSP430_INTERRUPT_H
+#define MDL_MSP430_INTERRUPT_H
 
-namespace mardev::msp430::interrupts
+#include <stdint.h>
+
+namespace mardev::msp430::interrupt
 {
     // Digital I/O
     const uint16_t* const digital_io_port_1 = (uint16_t* const) 0xFFE4; // P1IFG
