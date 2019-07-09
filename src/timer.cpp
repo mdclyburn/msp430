@@ -43,10 +43,8 @@ namespace mardev::msp430::timer
     {
         // TODO: disable interrupts
 
-        mardev::msp430::clock::set_auxiliary_source(
-            mardev::msp430::clock::lfxt1s::vlo_clock);
-        mardev::msp430::clock::set_auxiliary_divider(
-            mardev::msp430::clock::diva::d1);
+        using namespace mardev::msp430::clock;
+        configure_auxiliary_clock(LFXT1S::VLOCLK, DIVAx::D1);
 
         *registers::TACCR0 = 65535;
 
