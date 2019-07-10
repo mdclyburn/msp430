@@ -27,8 +27,8 @@ namespace mardev::msp430::usci::spi
         *ctl1 |= usci::UCSWRST;
 
         const uint8_t pin_clock = SCLK[(uint8_t) module],
-            pin_mosi = SCLK[(uint8_t) module],
-            pin_miso = SCLK[(uint8_t) module];
+            pin_mosi = MOSI[(uint8_t) module],
+            pin_miso = MISO[(uint8_t) module];
 
         // Configure pins.
         dio::set_pin_mode(pin_clock, dio::pin_mode::output, dio::Function::Secondary);
@@ -37,14 +37,13 @@ namespace mardev::msp430::usci::spi
 
         *ctl1 |= (uint8_t) clock_source;
 
-        const uint8_t settings = (uint8_t) clock_phase
+        *ctl0 = (uint8_t) clock_phase
             | (uint8_t) clock_polarity
             | (uint8_t) first_bit
-            | (uint8_t) character_length
+            // | (uint8_t) character_length // <- something about this sets the wrong bits
             | (uint8_t) UCMST::Master // Assume master mode
             | (uint8_t) spi_mode
             | 1; // Synchronous mode enable
-        *ctl0 = settings;
 
         *ctl1 &= ~usci::UCSWRST;
 
@@ -56,7 +55,7 @@ namespace mardev::msp430::usci::spi
     {
         // Wait for the buffer to be ready.
         const uint8_t tx_flag = usci::TXIFG[(uint8_t) module];
-        while(*interrupt::registers::IFG2 & tx_flag);
+        while(!(*interrupt::registers::IFG2 & tx_flag));
 
         // Write data out.
         volatile uint8_t* const tx_buffer = usci::registers::TXBUF[(uint8_t) module];
@@ -64,7 +63,7 @@ namespace mardev::msp430::usci::spi
 
         // Wait for data to be ready.
         const uint8_t rx_flag = usci::RXIFG[(uint8_t) module];
-        while(*interrupt::registers::IFG2 & rx_flag);
+        while(!(*interrupt::registers::IFG2 & rx_flag));
         volatile const uint8_t* const rx_buffer = usci::registers::RXBUF[(uint8_t) module];
         return *rx_buffer;
     }
