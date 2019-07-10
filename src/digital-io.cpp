@@ -13,6 +13,8 @@ namespace mardev::msp430::digital_io
     volatile uint8_t* const port_select_2[]         = { registers::P1SEL2, registers::P2SEL2 };
     volatile uint8_t* const port_resistor_enable[]  = { registers::P1REN,  registers::P2REN };
 
+
+
     // 0 = pin is not attached to a digital IO port.
     const uint8_t pin_port[] = {
         0, 1, 1, 1, 1, 1, 1, 2, 2, 2,
@@ -45,7 +47,8 @@ namespace mardev::msp430::digital_io
     };
 
     void set_pin_mode(const uint8_t pin_number,
-                      const pin_mode mode)
+                      const pin_mode mode,
+                      const Function func)
     {
         const uint8_t port = pin_port[pin_number-1] - 1;
         const uint8_t port_mask = pin_port_mask[pin_number-1];
@@ -64,15 +67,24 @@ namespace mardev::msp430::digital_io
         else
             *port_resistor_enable[port] &= ~port_mask;
 
-        // Select the digital IO function.
-        *port_select[port] &= ~port_mask;
-        *port_select_2[port] &= ~port_mask;
-
-        // Set output value.
-        if(mode == pin_mode::input_pullup)
-            *port_output[port] |= port_mask;
-        else // Pull-down or set output to low.
-            *port_output[port] &= ~port_mask;
+        // Set pin function.
+        switch(func)
+        {
+        case Function::IO: // Select the digital IO function.
+            *port_select[port] &= ~port_mask;
+            *port_select_2[port] &= ~port_mask;
+            break;
+        case Function::Primary: // Select primary peripheral module function.
+            *port_select[port] &= ~port_mask;
+            *port_select_2[port] |= port_mask;
+            break;
+        case Function::Special: // Reserved. This is a device-specific setting.
+            break;
+        case Function::Secondary: // Select secondary peripheral module function.
+            *port_select[port] |= port_mask;
+            *port_select_2[port] |= port_mask;
+            break;
+        }
 
         return;
     }

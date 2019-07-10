@@ -5,6 +5,12 @@
 
 namespace mardev::msp430::interrupt
 {
+    namespace registers
+    {
+        volatile uint8_t* const IE2 =  (uint8_t* const) 0x01;
+        volatile uint8_t* const IFG2 = (uint8_t* const) 0x03;
+    }
+
     // Digital I/O
     const uint16_t* const digital_io_port_1 = (uint16_t* const) 0xFFE4; // P1IFG
     const uint16_t* const digital_io_port_2 = (uint16_t* const) 0xFFE6; // P2IFG

@@ -49,7 +49,7 @@ namespace mardev::msp430::usci::spi
     enum class UCMST : uint8_t
     {
         Slave =  0x00,
-        Master = 0x04
+        Master = 0x08
     };
 
     /** Clock source select */
@@ -60,16 +60,11 @@ namespace mardev::msp430::usci::spi
         SMCLK  = 0x80
     };
 
-    /* initialize()
-     * optionally set 3- or 4-pin mode?
-     * set clock phase
-     * set clock polarity
-     * set bit direction
-     * set character length: 7- or 8-bit
-     * enable synchronous mode (required = 1)
-     * set clock
-     * clear the software reset enable bit
-     */
+    // Mapping module -> pin number
+    extern const uint8_t SCLK[];
+    extern const uint8_t MOSI[];
+    extern const uint8_t MISO[];
+
     void initialize(const usci::Module module,
                     const usci::UCMODE spi_mode,
                     const UCSSELx clock_source,
@@ -77,6 +72,9 @@ namespace mardev::msp430::usci::spi
                     const UCCKPL clock_polarity,
                     const UCMSB first_bit,
                     const UC7BIT character_length);
+
+    uint8_t write(const usci::Module,
+                  const uint8_t data);
 }
 
 #endif

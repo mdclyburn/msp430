@@ -43,17 +43,22 @@ namespace mardev::msp430::usci
         volatile uint8_t* const       UCB0TXBUF = (uint8_t* const) 0x6F;
 
         // ===== Module-Register mapping
-        extern volatile uint8_t* const CTL0[] =  { UCA0CTL0, UCB0CTL0 };
-        extern volatile uint8_t* const CTL1[] =  { UCA0CTL1, UCB0CTL1 };
+        extern volatile uint8_t* const CTL0[];
+        extern volatile uint8_t* const CTL1[];
 
-        extern volatile uint8_t* const BR0[]  =  { UCA0BR0, UCB0BR0 };
-        extern volatile uint8_t* const BR1[]  =  { UCA0BR1, UCB0BR1 };
+        extern volatile uint8_t* const BR0[];
+        extern volatile uint8_t* const BR1[];
 
-        extern volatile uint8_t* const STAT[] =  { UCA0STAT, UCB0STAT };
+        extern volatile uint8_t* const STAT[];
 
-        extern volatile const uint8_t* const       RXBUF[] = { UCA0RXBUF, UCB0RXBUF };
-        extern volatile uint8_t* const TXBUF[] = { UCA0TXBUF, UCB0TXBUF };
+        extern volatile const uint8_t* const RXBUF[];
+        extern volatile uint8_t* const       TXBUF[];
     }
+
+    extern uint8_t const RXIE[];
+    extern uint8_t const TXIE[];
+    extern uint8_t const RXIFG[];
+    extern uint8_t const TXIFG[];
 
     // USCI control register 0 masks
     const uint8_t UCMODEx = 0x06;
@@ -61,6 +66,18 @@ namespace mardev::msp430::usci
     // USCI control register 1 masks
     const uint8_t UCSSELx = 0xC0;
     const uint8_t UCSWRST = 0x01;
+
+    // Interrupt Enable register masks
+    const uint8_t UCB0TXIE = 0x08;
+    const uint8_t UCB0RXIE = 0x04;
+    const uint8_t UCA0TXIE = 0x02;
+    const uint8_t UCA0RXIE = 0x01;
+
+    // Interrupt Flag 2 register masks
+    const uint8_t UCB0TXIFG = 0x08;
+    const uint8_t UCB0RXIFG = 0x04;
+    const uint8_t UCA0TXIFG = 0x02;
+    const uint8_t UCA0RXIFG = 0x01;
 
     enum class Module : uint8_t
     {
