@@ -24,7 +24,7 @@ namespace mardev::msp430::usci::spi
             ctl0 = usci::registers::CTL0[(uint8_t)module],
             * ctl1 = usci::registers::CTL1[(uint8_t)module];
 
-        *ctl1 |= usci::UCSWRST;
+        *ctl1 = (uint8_t) clock_source | usci::UCSWRST;
 
         const uint8_t pin_clock = SCLK[(uint8_t) module],
             pin_mosi = MOSI[(uint8_t) module],
