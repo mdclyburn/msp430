@@ -1,3 +1,13 @@
+/**
+ * @file
+ *
+ * Digital I/O.
+ *
+ * Manipulates digital I/O.
+ * Each pin can be configured for input or output with set_pin_mode().
+ * Many pins are multiplexed with other modules and can be manually set to support those modules here as well.
+ */
+
 #ifndef MDL_MSP430_DIGITAL_IO_H
 #define MDL_MSP430_DIGITAL_IO_H
 
@@ -7,12 +17,18 @@ namespace mardev::msp430::digital_io
 {
     namespace registers
     {
-        // Port 1
+        // ===== Port 1
+        /** Port 1 pin input reading register. */
         volatile uint8_t* const P1IN =   (volatile uint8_t* const) 0x20;
+        /** Port 1 pin output setting register. */
         volatile uint8_t* const P1OUT =  (volatile uint8_t* const) 0x21;
+        /** Port 1 pin direction setting register. */
         volatile uint8_t* const P1DIR =  (volatile uint8_t* const) 0x22;
+        /** Port 1 pin interrupt flag register. */
         volatile uint8_t* const P1IFG =  (volatile uint8_t* const) 0x23;
+        /** Port 1 pin interrupt edge setting register. */
         volatile uint8_t* const P1IES =  (volatile uint8_t* const) 0x24;
+        /** Port 1 pin interrupt enable setting register. */
         volatile uint8_t* const P1IE  =  (volatile uint8_t* const) 0x25;
         volatile uint8_t* const P1SEL =  (volatile uint8_t* const) 0x26;
         volatile uint8_t* const P1SEL2 = (volatile uint8_t* const) 0x41;
@@ -36,12 +52,20 @@ namespace mardev::msp430::digital_io
     /** Mapping from pin number to bit mask. */
     extern const uint8_t pin_port_mask[];
 
+    /** Pin digital input or output specifier.
+     */
     enum class pin_mode
     {
         output,
         input
     };
 
+    /** Pin function specifier.
+     * IO is for digital I/O.
+     * Primary is for the pin's primary function.
+     * Special is either a reserved setting or specific to the microcontroller.
+     * Secondary is for the pin's secondary function.
+     */
     enum class Function : uint8_t
     {
         IO = 0,
@@ -50,6 +74,8 @@ namespace mardev::msp430::digital_io
         Secondary = 3
     };
 
+    /** Digital high and low.
+     */
     enum class logic
     {
         high,
