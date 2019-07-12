@@ -35,13 +35,11 @@ namespace mardev::msp430::usci::spi
         dio::set_pin_mode(pin_mosi, dio::pin_mode::output, dio::Function::Secondary);
         dio::set_pin_mode(pin_miso, dio::pin_mode::input, dio::Function::Secondary);
 
-        *ctl1 |= (uint8_t) clock_source;
-
         *ctl0 = (uint8_t) clock_phase
             | (uint8_t) clock_polarity
             | (uint8_t) first_bit
-            // | (uint8_t) character_length // <- something about this sets the wrong bits
-            | (uint8_t) UCMST::Master // Assume master mode
+            // | (uint8_t) character_length // <- This gets cast to 0x12 for some reason.
+            | (uint8_t) UCMST::Master // Assume master mode.
             | (uint8_t) spi_mode
             | 1; // Synchronous mode enable
 
