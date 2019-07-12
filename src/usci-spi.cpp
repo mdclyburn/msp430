@@ -51,18 +51,20 @@ namespace mardev::msp430::usci::spi
     uint8_t write(const usci::Module module,
                   const uint8_t data)
     {
+        volatile const uint8_t tx_flag = usci::TXIFG[(uint8_t) module];
+        volatile const uint8_t rx_flag = usci::RXIFG[(uint8_t) module];
+        volatile uint8_t* const tx_buffer = usci::registers::TXBUF[(uint8_t) module];
+        volatile const uint8_t* const rx_buffer = usci::registers::RXBUF[(uint8_t) module];
+
         // Wait for the buffer to be ready.
-        const uint8_t tx_flag = usci::TXIFG[(uint8_t) module];
         while(!(*interrupt::registers::IFG2 & tx_flag));
 
         // Write data out.
-        volatile uint8_t* const tx_buffer = usci::registers::TXBUF[(uint8_t) module];
         *tx_buffer = data;
 
         // Wait for data to be ready.
-        const uint8_t rx_flag = usci::RXIFG[(uint8_t) module];
         while(!(*interrupt::registers::IFG2 & rx_flag));
-        volatile const uint8_t* const rx_buffer = usci::registers::RXBUF[(uint8_t) module];
+
         return *rx_buffer;
     }
 }
