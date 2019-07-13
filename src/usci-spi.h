@@ -76,6 +76,12 @@ namespace mardev::msp430::usci::spi
                     const UCMSB first_bit,
                     const UC7BIT character_length);
 
+    inline void reset(const usci::Module module)
+    {
+        *usci::registers::CTL1[(uint8_t) module] |= usci::UCSWRST;
+        return;
+    }
+
     uint8_t write(const usci::Module,
                   const uint8_t data);
 }
