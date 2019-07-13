@@ -1,3 +1,8 @@
+/** @file
+ *
+ * USCI Serial Peripheral Interface functions
+ */
+
 #ifndef MDL_MSP430_USCISPI_H
 #define MDL_MSP430_USCISPI_H
 

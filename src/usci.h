@@ -1,3 +1,8 @@
+/** @file
+ *
+ * USCI functions
+ */
+
 #ifndef MDL_MSP430_USCI_H
 #define MDL_MSP430_USCI_H
 
@@ -79,6 +84,7 @@ namespace mardev::msp430::usci
     const uint8_t UCA0TXIFG = 0x02;
     const uint8_t UCA0RXIFG = 0x01;
 
+    /** USCI Module */
     enum class Module : uint8_t
     {
         A0 = 0,
