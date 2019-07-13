@@ -1,3 +1,8 @@
+/** @file
+ *
+ * USCI SPI interface implementation
+ */
+
 #ifndef MDL_MSP430_USCISPI_H
 #define MDL_MSP430_USCISPI_H
 
@@ -72,6 +77,21 @@ namespace mardev::msp430::usci::spi
     extern const uint8_t MOSI[];
     extern const uint8_t MISO[];
 
+    /** Initialize an SPI module.
+     *
+     * Perform initialization steps to prepare an SPI module for use.
+     * This includes configuring the pins correctly.
+     *
+     * \param module USCI module to set up for SPI.
+     * \param spi_mode SPI mode to set up (3-pin, 4-pin).
+     * \param clock_source Where to source the clock signal from.
+     * \param clock_polarity SPI clock's idle state.
+     *                       See documentation for the peripheral being interfaced with for the correct value.
+     * \param clock_phase SPI interface bit capture and change setting.
+     *                       See documentation for the peripheral being interfaced with for the correct value.
+     *                       Note that UCCKPH uses CPHA = 0 for UCCKPH::P0 (correcting MSP430's setting).
+     * \param first_bit Set the bit orientation of data.
+     */
     void initialize(const usci::Module module,
                     const usci::UCMODE spi_mode,
                     const UCSSELx clock_source,
@@ -79,13 +99,29 @@ namespace mardev::msp430::usci::spi
                     const UCCKPL clock_polarity,
                     const UCMSB first_bit);
 
+    /** Reset the SPI module settings.
+     *
+     * After this function is called, initialize() must be called to use the provided SPI module again.
+     * An SPI module cannot be used after it is placed in the reset state.
+     *
+     * \param module SPI module to reset.
+     */
     inline void reset(const usci::Module module)
     {
         *usci::registers::CTL1[(uint8_t) module] |= usci::UCSWRST;
         return;
     }
 
-    uint8_t write(const usci::Module,
+    /** Send data over SPI.
+     *
+     * Sends a byte over the SPI interface.
+     * An empty transmit buffer will be awaited and written to once empty.
+     * A received character will be awaited.
+     *
+     * \param module SPI module to send data with.
+     * \param data Data to be sent over SPI.
+     */
+    uint8_t write(const usci::Module module,
                   const uint8_t data);
 }
 
