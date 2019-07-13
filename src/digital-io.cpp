@@ -13,8 +13,6 @@ namespace mardev::msp430::digital_io
     volatile uint8_t* const port_select_2[]         = { registers::P1SEL2, registers::P2SEL2 };
     volatile uint8_t* const port_resistor_enable[]  = { registers::P1REN,  registers::P2REN };
 
-
-
     // 0 = pin is not attached to a digital IO port.
     const uint8_t pin_port[] = {
         0, 1, 1, 1, 1, 1, 1, 2, 2, 2,
@@ -50,10 +48,20 @@ namespace mardev::msp430::digital_io
                       const pin_mode mode,
                       const Function func)
     {
+        // Guard against not-a-pin.
+        if(pin_port[pin_number-1] == 0)
+            return;
+
         const uint8_t port = pin_port[pin_number-1] - 1;
         const uint8_t port_mask = pin_port_mask[pin_number-1];
 
-        if(port == 0) return;
+        if(port_mask == 0)
+        {
+            /** Sanity check against incorrect pin number to port mask mapping.
+             * Something is wrong with the library code if this gets hit.
+             */
+            return;
+        }
 
         // Set input or output.
         if(mode == pin_mode::output)
