@@ -21,8 +21,8 @@ namespace mardev::msp430::usci::spi
                     const UC7BIT character_length)
     {
         volatile uint8_t* const
-            ctl0 = usci::registers::CTL0[(uint8_t)module],
-            * ctl1 = usci::registers::CTL1[(uint8_t)module];
+            ctl0 = usci::registers::CTL0[(uint8_t) module],
+            * ctl1 = usci::registers::CTL1[(uint8_t) module];
 
         *ctl1 = (uint8_t) clock_source | usci::UCSWRST;
 
@@ -38,10 +38,10 @@ namespace mardev::msp430::usci::spi
         *ctl0 = (uint8_t) clock_phase
             | (uint8_t) clock_polarity
             | (uint8_t) first_bit
-            // | (uint8_t) character_length // <- This gets cast to 0x12 for some reason.
+            // | (uint8_t) character_length // See the UC7BIT declaration...
             | (uint8_t) UCMST::Master // Assume master mode.
             | (uint8_t) spi_mode
-            | 1; // Synchronous mode enable
+            | 1; // Ensure synchronous mode enabled.
 
         *ctl1 &= ~usci::UCSWRST;
 

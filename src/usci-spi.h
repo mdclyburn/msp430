@@ -41,7 +41,11 @@ namespace mardev::msp430::usci::spi
         MSBFirst = 0x20
     };
 
-    /** Character length select */
+    /** Character length select
+     *
+     * Currently, this enum's values get translated into 0x12.
+     * Not sure if this is a bug, but it isn't wholly important right now.
+     */
     enum class UC7BIT : uint8_t
     {
         L8 = 0x00,
