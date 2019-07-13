@@ -30,9 +30,9 @@ namespace mardev::msp430::usci::spi
             pin_miso = MISO[(uint8_t) module];
 
         // Configure pins.
-        dio::set_pin_mode(pin_clock, dio::pin_mode::output, dio::Function::Secondary);
-        dio::set_pin_mode(pin_mosi, dio::pin_mode::output, dio::Function::Secondary);
-        dio::set_pin_mode(pin_miso, dio::pin_mode::input, dio::Function::Secondary);
+        dio::set_pin_mode(pin_clock, dio::IO::Output, dio::Function::Secondary);
+        dio::set_pin_mode(pin_mosi, dio::IO::Output, dio::Function::Secondary);
+        dio::set_pin_mode(pin_miso, dio::IO::Input, dio::Function::Secondary);
 
         *ctl0 = (uint8_t) clock_phase
             | (uint8_t) clock_polarity

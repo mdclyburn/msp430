@@ -45,7 +45,7 @@ namespace mardev::msp430::digital_io
     };
 
     void set_pin_mode(const uint8_t pin_number,
-                      const pin_mode mode,
+                      const IO direction,
                       const Function func)
     {
         // Guard against not-a-pin.
@@ -64,13 +64,13 @@ namespace mardev::msp430::digital_io
         }
 
         // Set input or output.
-        if(mode == pin_mode::output)
+        if(direction == IO::Output)
             *port_direction[port] |= port_mask;
         else
             *port_direction[port] &= ~port_mask;
 
         // Enable the internal resistor.
-        if(mode != pin_mode::output)
+        if(direction != IO::Output)
             *port_resistor_enable[port] |= port_mask;
         else
             *port_resistor_enable[port] &= ~port_mask;
@@ -103,11 +103,11 @@ namespace mardev::msp430::digital_io
     }
 
     void write(const uint8_t pin_number,
-               const logic level)
+               const Logic level)
     {
         const uint8_t port = pin_port[pin_number-1] - 1;
         const uint8_t port_mask = pin_port_mask[pin_number-1];
-        if(level == logic::high)
+        if(level == Logic::High)
             *port_output[port] |= port_mask;
         else
             *port_output[port] &= ~port_mask;

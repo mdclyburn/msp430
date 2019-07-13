@@ -14,14 +14,6 @@ namespace mardev::msp430::usci::spi
 {
     namespace usci = mardev::msp430::usci;
 
-    // USCI control register 0 masks for SPI
-    const uint8_t _UCCKPH  = 0x80;
-    const uint8_t _UCCKPL  = 0x40;
-    const uint8_t _UCMSB   = 0x20;
-    const uint8_t _UC7BIT  = 0x10;
-    const uint8_t _UCMST   = 0x08;
-    const uint8_t _UCSYNC  = 0x01;
-
     /** Clock phase select
      *
      * This is backwards from the spec.

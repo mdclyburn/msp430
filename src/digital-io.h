@@ -47,10 +47,10 @@ namespace mardev::msp430::digital_io
     extern const uint8_t pin_port_mask[];
 
     /** Pin digital input or output specifier. */
-    enum class pin_mode
+    enum class IO
     {
-        output,
-        input
+        Input,
+        Output
     };
 
     /** Pin function specifier.
@@ -68,26 +68,31 @@ namespace mardev::msp430::digital_io
     };
 
     /** Digital high and low. */
-    enum class logic
+    enum class Logic
     {
-        high,
-        low
+        High,
+        Low
     };
 
     /** Set the mode for a pin.
      *
      * \param pin_number Pin number.
-     * \param mode Desired mode.
+     * \param direction Desired mode.
      * \param func Selected module function.
      */
     void set_pin_mode(const uint8_t pin_number,
-                      const pin_mode mode,
+                      const IO mode,
                       const Function func);
 
+    /** Set the mode for a pin.
+     *
+     * \param pin_number Pin number.
+     * \param direction Desired mode.
+     */
     inline void set_pin_mode(const uint8_t pin_number,
-                             const pin_mode mode)
+                             const IO direction)
     {
-        set_pin_mode(pin_number, mode, Function::IO);
+        set_pin_mode(pin_number, direction, Function::IO);
     }
 
     /** Read the digital signal on a pin.
@@ -102,7 +107,7 @@ namespace mardev::msp430::digital_io
      * \param level Signal to output.
      */
     void write(const uint8_t pin_number,
-               const logic level);
+               const Logic level);
 }
 
 #endif
