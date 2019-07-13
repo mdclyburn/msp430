@@ -17,6 +17,9 @@ namespace mardev::msp430::clock
     const uint8_t BCSCTL1_XTS     = 0x40;
     const uint8_t BCSCTL1_DIVAx   = 0x30;
 
+    const uint8_t BCSCTL2_SELS    = 0x08;
+    const uint8_t BCSCTL2_DIVSx   = 0x06;
+
     const uint8_t BCSCTL3_LFXT1Sx = 0x30;
 
     /** Divider for ACLK (BCSCTL1) */
@@ -26,6 +29,22 @@ namespace mardev::msp430::clock
         D2 = 0x10, // /2
         D3 = 0x20, // /4
         D4 = 0x30  // /8
+    };
+
+    /** Sub-system master clock select (BCSCTL2) */
+    enum class SELS : uint8_t
+    {
+        DCOCLK     = 0x00, // Source from DCO.
+        XT2_LFXT1S = 0x01  // XT2CLK if XT2 osc., otherwise, whatever LFXT1S selects.
+    };
+
+    /** Sub-system master clock divider (BCSCTL2) */
+    enum class DIVS : uint8_t
+    {
+        D1 = 0x00,
+        D2 = 0x02,
+        D4 = 0x04,
+        D8 = 0x06
     };
 
     /** Low-frequency clock select (BCSCTL3) */
@@ -57,6 +76,38 @@ namespace mardev::msp430::clock
         const uint16_t* const loc = (const uint16_t*) preset;
         *registers::DCOCTL = *loc;
         *registers::BCSCTL1 = *(loc + 1);
+    }
+
+    /** Set the source for the sub-system master clock signal.
+     *
+     * \param source Source to use.
+     */
+    inline void set_smclock_source(const SELS source)
+    {
+        *registers::BCSCTL2 =
+            *registers::BCSCTL2
+            & ~BCSCTL2_SELS
+            | ((uint8_t) source);
+    }
+
+    inline void set_smclock_divider(const DIVS divider)
+    {
+        *registers::BCSCTL2 =
+            *registers::BCSCTL2
+            & ~BCSCTL2_DIVSx
+            | ((uint8_t) divider);
+    }
+
+    /** Configure the sub-system main clock.
+     *
+     * \param source Source to use.
+     * \param divider Divider value to use.
+     */
+    inline void configure_smclock(const SELS source,
+                                  const DIVS divider)
+    {
+        set_smclock_source(source);
+        set_smclock_divider(divider);
     }
 
     /** Set the source for the auxiliary clock signal.
