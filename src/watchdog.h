@@ -1,3 +1,8 @@
+/** @file
+ *
+ * Watchdog+ functions
+ */
+
 #ifndef MDL_MSP430_WATCHDOG_H
 #define MDL_MSP430_WATCHDOG_H
 

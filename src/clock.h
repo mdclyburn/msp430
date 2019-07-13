@@ -1,3 +1,8 @@
+/** @file
+ *
+ * Clock functions
+ */
+
 #ifndef MDL_MSP430_CLOCK_H
 #define MDL_MSP430_CLOCK_H
 
@@ -90,6 +95,10 @@ namespace mardev::msp430::clock
             | ((uint8_t) source);
     }
 
+    /** Divide the sub-system main clock.
+     *
+     * \param divider Divider value to use.
+     */
     inline void set_smclock_divider(const DIVS divider)
     {
         *registers::BCSCTL2 =

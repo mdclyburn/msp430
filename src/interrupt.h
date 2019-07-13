@@ -1,3 +1,8 @@
+/** @file
+ *
+ * Interrupt functions
+ */
+
 #ifndef MDL_MSP430_INTERRUPT_H
 #define MDL_MSP430_INTERRUPT_H
 

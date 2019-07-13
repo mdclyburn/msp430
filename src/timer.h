@@ -1,3 +1,8 @@
+/** @file
+ *
+ * Timer functions
+ */
+
 #ifndef MDL_MSP430_TIMER_H
 #define MDL_MSP430_TIMER_H
 
