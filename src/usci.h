@@ -60,6 +60,7 @@ namespace mardev::msp430::usci
         extern volatile uint8_t* const       TXBUF[];
     }
 
+    // Mapping USCI module -> register mask
     extern uint8_t const RXIE[];
     extern uint8_t const TXIE[];
     extern uint8_t const RXIFG[];
@@ -84,7 +85,7 @@ namespace mardev::msp430::usci
     const uint8_t UCA0TXIFG = 0x02;
     const uint8_t UCA0RXIFG = 0x01;
 
-    /** USCI Module */
+    /** USCI module */
     enum class Module : uint8_t
     {
         A0 = 0,
