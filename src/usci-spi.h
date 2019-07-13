@@ -17,11 +17,14 @@ namespace mardev::msp430::usci::spi
     const uint8_t _UCMST   = 0x08;
     const uint8_t _UCSYNC  = 0x01;
 
-    /** Clock phase select */
+    /** Clock phase select
+     *
+     * This is backwards from the spec.
+     */
     enum class UCCKPH : uint8_t
     {
-        P0 = 0x00,
-        P1 = 0x80
+        P0 = 0x80,
+        P1 = 0x00
     };
 
     /** Clock polarity select */
