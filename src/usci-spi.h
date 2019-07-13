@@ -77,8 +77,7 @@ namespace mardev::msp430::usci::spi
                     const UCSSELx clock_source,
                     const UCCKPH clock_phase,
                     const UCCKPL clock_polarity,
-                    const UCMSB first_bit,
-                    const UC7BIT character_length);
+                    const UCMSB first_bit);
 
     inline void reset(const usci::Module module)
     {

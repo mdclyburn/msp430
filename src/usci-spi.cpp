@@ -17,8 +17,7 @@ namespace mardev::msp430::usci::spi
                     const UCSSELx clock_source,
                     const UCCKPH clock_phase,
                     const UCCKPL clock_polarity,
-                    const UCMSB first_bit,
-                    const UC7BIT character_length)
+                    const UCMSB first_bit)
     {
         volatile uint8_t* const
             ctl0 = usci::registers::CTL0[(uint8_t) module],
