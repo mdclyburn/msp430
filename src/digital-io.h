@@ -39,8 +39,15 @@ namespace mardev::msp430::digital_io
     enum class pin_mode
     {
         output,
-        input_pullup,
-        input_pulldown
+        input
+    };
+
+    enum class Function : uint8_t
+    {
+        IO = 0,
+        Primary = 1,
+        Special = 2,
+        Secondary = 3
     };
 
     enum class logic
@@ -53,9 +60,17 @@ namespace mardev::msp430::digital_io
      *
      * \param pin_number Pin number.
      * \param mode Desired mode.
+     * \param func Selected module function.
      */
     void set_pin_mode(const uint8_t pin_number,
-                      const pin_mode mode);
+                      const pin_mode mode,
+                      const Function func);
+
+    inline void set_pin_mode(const uint8_t pin_number,
+                             const pin_mode mode)
+    {
+        set_pin_mode(pin_number, mode, Function::IO);
+    }
 
     /** Read the digital signal on a pin.
      *

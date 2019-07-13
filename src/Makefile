@@ -18,6 +18,8 @@ LDFLAGS = -L $(MSP430PATH)/msp430-elf/lib/430 \
 objects = \
 	digital-io.o \
 	timer.o \
+	usci.o \
+	usci-spi.o \
 	watchdog.o
 
 libmdlmsp430.a: $(objects)
@@ -26,6 +28,10 @@ libmdlmsp430.a: $(objects)
 digital-io.o:
 
 timer.o:
+
+usci.o:
+
+usci-spi.o:
 
 watchdog.o:
 
