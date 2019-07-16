@@ -31,6 +31,9 @@ namespace mardev::msp430::usci
         volatile const uint8_t* const UCA0RXBUF = (const uint8_t* const) 0x66;
         volatile uint8_t* const       UCA0TXBUF = (uint8_t* const) 0x67;
 
+        // Auto baud control
+        volatile uint8_t* const UCA0BCTL = (uint8_t* const) 0x5D;
+
         // ===== USCI_B0 Control and Status Registers
         // Control
         volatile uint8_t* const UCB0CTL0 = (uint8_t* const) 0x68;
@@ -100,6 +103,15 @@ namespace mardev::msp430::usci
         SPI4Low  = 0x02 << 1,
         I2C      = 0x03 << 1
     };
+
+    /** Synchronous mode enable */
+    enum class UCSYNC : uint8_t
+    {
+        Asynchronous = 0x00,
+        Synchronous  = 0x01
+    };
+
+    const uint8_t UCSWRST = 0x01;
 }
 
 #endif
