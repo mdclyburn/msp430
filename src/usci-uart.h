@@ -7,7 +7,13 @@ namespace mardev::msp430::usci::uart
 {
     namespace usci = mardev::msp430::usci;
 
+    // Control register 0
     const uint8_t UCSSEL = 0x03 << 6;
+
+    // Modulation control register
+    const uint8_t UCBRFx = 0x80;
+    const uint8_t UCBRSx = 0x07 << 1;
+    const uint8_t UCOS16 = 0x01;
 
     /** Parity enable */
     enum class UCPEN : uint8_t
@@ -84,7 +90,8 @@ namespace mardev::msp430::usci::uart
                     const UCPAR parity,
                     const UCMSB first_bit,
                     const UC7BIT character_length,
-                    const UCSPB stop_bits);
+                    const UCSPB stop_bits,
+                    const uint8_t modulation);
 }
 
 #endif
