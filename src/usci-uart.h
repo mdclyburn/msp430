@@ -92,6 +92,17 @@ namespace mardev::msp430::usci::uart
                     const UC7BIT character_length,
                     const UCSPB stop_bits,
                     const uint8_t modulation);
+
+    inline uint8_t get_modulation_setting(const uint8_t first_stage,
+                                       const uint8_t second_stage,
+                                       const bool enable_oversampling)
+    {
+        const uint8_t config = (first_stage << 4) | (second_stage << 1);
+        if(enable_oversampling)
+            return config | 1;
+        else
+            return config;
+    }
 }
 
 #endif
