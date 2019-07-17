@@ -56,6 +56,12 @@ namespace mardev::msp430::usci::uart
         ACLK  = 0x01 << 6,
         SMCLK = 0x02 << 6
     };
+
+    inline void reset(const usci::Module module)
+    {
+        uint8_t* const ctl1 = usci::registers::CTL1[(uint8_t) module];
+        *ctl1 |= usci::UCSWRST;
+    }
 }
 
 #endif

@@ -110,8 +110,6 @@ namespace mardev::msp430::usci
         Asynchronous = 0x00,
         Synchronous  = 0x01
     };
-
-    const uint8_t UCSWRST = 0x01;
 }
 
 #endif
