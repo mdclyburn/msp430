@@ -7,6 +7,8 @@ namespace mardev::msp430::usci::uart
 {
     namespace usci = mardev::msp430::usci;
 
+
+
     // Control register 0
     const uint8_t UCSSEL = 0x03 << 6;
 
@@ -91,6 +93,7 @@ namespace mardev::msp430::usci::uart
                     const UCMSB first_bit,
                     const UC7BIT character_length,
                     const UCSPB stop_bits,
+                    const uint16_t baud_control,
                     const uint8_t modulation);
 
     inline uint8_t get_modulation_setting(const uint8_t first_stage,

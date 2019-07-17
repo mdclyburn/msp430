@@ -57,6 +57,8 @@ namespace mardev::msp430::usci
         extern volatile uint8_t* const BR0[];
         extern volatile uint8_t* const BR1[];
 
+        extern volatile uint8_t* const MCTL[];
+
         extern volatile uint8_t* const STAT[];
 
         extern volatile const uint8_t* const RXBUF[];
