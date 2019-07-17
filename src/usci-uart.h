@@ -1,9 +1,13 @@
 #ifndef MDL_MSP430_USCI_UART_H
 #define MDL_MSP430_USCI_UART_H
 
+#include "usci.h"
+
 namespace mardev::msp430::usci::uart
 {
     namespace usci = mardev::msp430::usci;
+
+    const uint8_t UCSSEL = 0x03 << 6;
 
     /** Parity enable */
     enum class UCPEN : uint8_t
@@ -57,11 +61,30 @@ namespace mardev::msp430::usci::uart
         SMCLK = 0x02 << 6
     };
 
+    // Mapping module -> pin number
+    extern const uint8_t RXD[];
+    extern const uint8_t TXD[];
+
     inline void reset(const usci::Module module)
     {
-        uint8_t* const ctl1 = usci::registers::CTL1[(uint8_t) module];
+        volatile uint8_t* const ctl1 = usci::registers::CTL1[(uint8_t) module];
         *ctl1 |= usci::UCSWRST;
     }
+
+    inline void enable(const usci::Module module)
+    {
+        volatile uint8_t* const ctl1 = usci::registers::CTL1[(uint8_t) module];
+        *ctl1 &= ~usci::UCSWRST;
+    }
+
+    void initialize(const usci::Module module,
+                    const UCMODE0 mode,
+                    const UCSSELx clock_source,
+                    const UCPEN parity_enable,
+                    const UCPAR parity,
+                    const UCMSB first_bit,
+                    const UC7BIT character_length,
+                    const UCSPB stop_bits);
 }
 
 #endif

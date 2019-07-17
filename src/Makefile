@@ -20,6 +20,7 @@ objects = \
 	timer.o \
 	usci.o \
 	usci-spi.o \
+	usci-uart.o \
 	watchdog.o
 
 libmdlmsp430.a: $(objects)
