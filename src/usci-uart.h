@@ -106,6 +106,14 @@ namespace mardev::msp430::usci::uart
         else
             return config;
     }
+
+    void write(const usci::Module module,
+               const uint8_t* const data,
+               const uint16_t length);
+
+    uint16_t read(const usci::Module module,
+                  uint8_t* const buffer,
+                  const uint16_t max_length);
 }
 
 #endif
