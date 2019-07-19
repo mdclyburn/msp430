@@ -12,42 +12,7 @@ namespace mardev::msp430::usci::uart
     const uint8_t RXD[] = { 3 };
     const uint8_t TXD[] = { 4 };
 
-    void initialize(const usci::Module module,
-                    const UCMODE0 mode,
-                    const UCSSELx clock_source,
-                    const UCPEN parity_enable,
-                    const UCPAR parity,
-                    const UCMSB first_bit,
-                    const UC7BIT character_length,
-                    const UCSPB stop_bits,
-                    const uint16_t baud_control,
-                    const uint8_t modulation_setting)
-    {
-        volatile uint8_t* const ctl0 = usci::registers::CTL0[(uint8_t) module];
-        volatile uint8_t* const ctl1 = usci::registers::CTL1[(uint8_t) module];
-        volatile uint8_t* const br0  = usci::registers::BR0[(uint8_t) module];
-        volatile uint8_t* const br1  = usci::registers::BR1[(uint8_t) module];
-        volatile uint8_t* const mctl = usci::registers::MCTL[(uint8_t) module];
-
-        reset(module);
-
-        *ctl0 = 0;
-        *ctl1 = (*ctl1 & ~UCSSEL) | (uint8_t) clock_source;
-        *br0 = (uint8_t) (baud_control >> 8);
-        *br1 = (uint8_t) (baud_control & 0xFF);
-        *mctl = modulation_setting;
-
-        const uint8_t pin_rxd = RXD[(uint8_t) module];
-        const uint8_t pin_txd = TXD[(uint8_t) module];
-        dio::set_pin_mode(pin_rxd, dio::IO::Input, dio::Function::Secondary);
-        dio::set_pin_mode(pin_txd, dio::IO::Output, dio::Function::Secondary);
-
-        enable(module);
-
-        return;
-    }
-
-    void write(const usci::Module module,
+    void write(const uart::Module module,
                const uint8_t* const data,
                const uint16_t length)
     {
@@ -65,7 +30,7 @@ namespace mardev::msp430::usci::uart
         return;
     }
 
-    uint16_t read(const usci::Module module,
+    uint16_t read(const uart::Module module,
                   uint8_t* const buffer,
                   const uint16_t max_length)
     {
@@ -83,7 +48,7 @@ namespace mardev::msp430::usci::uart
 
             *(out + len) = *rx_buffer;
             len++;
-        } while(!(*status & UCBRK));
+        } while(len < max_length);
 
         return len;
     }
