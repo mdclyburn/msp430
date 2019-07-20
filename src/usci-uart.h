@@ -23,43 +23,8 @@ namespace mardev::msp430::usci::uart
         A0 = 0
     };
 
-    /** Parity enable */
-    enum class UCPEN : uint8_t
-    {
-        Disabled = 0x00,
-        Enabled  = 0x80
-    };
-
-    /** Parity select */
-    enum class UCPAR : uint8_t
-    {
-        Odd  = 0x00,
-        Even = 0x40
-    };
-
-    /** Bit-endianness select */
-    enum class UCMSB : uint8_t
-    {
-        LSBFirst = 0x00,
-        MSBFirst = 0x20
-    };
-
-    /** Character length */
-    enum class UC7BIT : uint8_t
-    {
-        L8 = 0x00,
-        L7 = 0x10
-    };
-
-    /** Number of stop bits */
-    enum class UCSPB : uint8_t
-    {
-        B1 = 0x00,
-        B2 = 0x08
-    };
-
     /** Asynchronous USCI mode select */
-    enum class UCMODE0 : uint8_t
+    enum class UCMODE : uint8_t
     {
         UART                     = 0x00,
         IdleLineMultiprocessor   = 0x01 << 1,
@@ -97,7 +62,7 @@ namespace mardev::msp430::usci::uart
     }
 
     inline void set_mode(const Module module,
-                         const UCMODE0 mode)
+                         const UCMODE mode)
     {
         volatile uint8_t* r = usci::registers::CTL0[(uint8_t) module];
         *r = *r & ~(0x03 << 1) | (uint8_t) mode;
