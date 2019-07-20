@@ -134,10 +134,20 @@ namespace mardev::msp430::usci::uart
         *mctl = config;
     }
 
+    inline bool errors(const Module module)
+    {
+        volatile uint8_t* const stat = usci::registers::STAT[(uint8_t) module];
+        return *stat & (UCFE | UCPE | UCBRK | UCOE);
+    }
+
     inline void clear_errors(const Module module)
     {
         volatile uint8_t* const stat = usci::registers::STAT[(uint8_t) module];
-        *stat &= 254;
+        volatile const uint8_t* const rx = usci::registers::RXBUF[(uint8_t) module];
+
+        *stat ^= UCFE | UCPE | UCBRK;
+        if (*stat & UCOE)
+            *rx;
     }
 
     inline uint8_t read(volatile const uint8_t* const status_register,
