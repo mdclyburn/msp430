@@ -1,3 +1,8 @@
+/** @file
+ *
+ * USCI UART implementation.
+ */
+
 #ifndef MDL_MSP430_USCI_UART_H
 #define MDL_MSP430_USCI_UART_H
 
@@ -55,12 +60,24 @@ namespace mardev::msp430::usci::uart
     extern const uint8_t RXD[];
     extern const uint8_t TXD[];
 
+    /** Reset the USCI module.
+     *
+     * \param module USCI module to reset.
+     */
     inline void reset(const Module module)
     {
         volatile uint8_t* const ctl1 = usci::registers::CTL1[(uint8_t) module];
         *ctl1 |= usci::UCSWRST;
     }
 
+    /** Enable the USCI module for use as a UART.
+     *
+     * Performs final configuration of the USCI module to be use as a UART.
+     * Configures the module's pins in the correct pin function and resets the software reset bit.
+     * This function should only be called once other configurations have been performed.
+     *
+     * \param module USCI module to enable for UART.
+     */
     inline void enable(const Module module)
     {
         volatile uint8_t* const ctl0 = usci::registers::CTL0[(uint8_t) module];
@@ -75,6 +92,11 @@ namespace mardev::msp430::usci::uart
         *ctl1 &= ~usci::UCSWRST;
     }
 
+    /** Sets the UART mode.
+     *
+     * \param module USCI module the configure.
+     * \param mode Desired UART mode.
+     */
     inline void set_mode(const Module module,
                          const UCMODE mode)
     {
@@ -82,6 +104,11 @@ namespace mardev::msp430::usci::uart
         *r = *r & ~(0x03 << 1) | (uint8_t) mode;
     }
 
+    /** Set the UART bit clock source.
+     *
+     * \param module USCI module to configure.
+     * \param source Clock to use for the bit clock.
+     */
     inline void set_clock_source(const Module module,
                                  const UCSSELx source)
     {
@@ -89,6 +116,15 @@ namespace mardev::msp430::usci::uart
         *r = *r & ~(0x03 << 6) | (uint8_t) source;
     }
 
+    /** Enable or disable the use of the parity bit.
+     *
+     * Turns on or off the use of a parity bit in UART communications.
+     * By default (and if enabled), the parity is odd parity.
+     * Use enable_even_parity() to use even parity.
+     *
+     * \param module USCI module to configure.
+     * \param enabled Whether to use a parity bit.
+     */
     inline void enable_parity(const Module module,
                               const bool enabled)
     {
@@ -98,6 +134,11 @@ namespace mardev::msp430::usci::uart
         if (enabled) *r |= UCPEN;
     }
 
+    /** Use even parity.
+     *
+     * This function will be necessary if the peripheral uses even parity.
+     * \param module USCI module to configure.
+     */
     inline void enable_even_parity(const Module module)
     {
         volatile uint8_t* r = usci::registers::CTL0[(uint8_t) module];
@@ -105,6 +146,12 @@ namespace mardev::msp430::usci::uart
         *r |= UCPAR;
     }
 
+    /** Use odd parity.
+     *
+     * This function is only necessary if the parity was set to even parity prior without a call to reset().
+     *
+     * \param module USCI module to configure.
+     */
     inline void enable_odd_parity(const Module module)
     {
         volatile uint8_t* r = usci::registers::CTL0[(uint8_t) module];
@@ -112,6 +159,13 @@ namespace mardev::msp430::usci::uart
         *r &= ~UCPAR;
     }
 
+    /** Set the divider for the bit clock.
+     *
+     * See documentation for the correct value to use.
+     *
+     * \param module USCI module to configure.
+     * \param val Divider value to use.
+     */
     inline void set_baud_control(const Module module,
                                  const uint16_t val)
     {
@@ -122,6 +176,16 @@ namespace mardev::msp430::usci::uart
         br[1] = (uint8_t) (val >> 8);
     }
 
+    /** Set bit clock modulation parameters.
+     *
+     * See documentation for the correct values to use.
+     * The first_stage value is only used when enable_oversampling is true.
+     *
+     * \param module USCI module to configure.
+     * \param first_stage First stage value.
+     * \param second_stage Second stage value.
+     * \param enable_oversampling Use oversampling.
+     */
     inline void set_modulation(const Module module,
                                   const uint8_t first_stage,
                                   const uint8_t second_stage,
@@ -134,12 +198,21 @@ namespace mardev::msp430::usci::uart
         *mctl = config;
     }
 
+    /** Returns true if an error bit is set.
+     *
+     * Returns true if a read encountered a parity, framing, or overrun error or a break condition.
+     * \param module USCI module to check.
+     */
     inline bool errors(const Module module)
     {
         volatile uint8_t* const stat = usci::registers::STAT[(uint8_t) module];
         return *stat & (UCFE | UCPE | UCBRK | UCOE);
     }
 
+    /** Clear status errors.
+     *
+     * \param module USCI module to clear errors for.
+     */
     inline void clear_errors(const Module module)
     {
         volatile uint8_t* const stat = usci::registers::STAT[(uint8_t) module];
@@ -150,11 +223,25 @@ namespace mardev::msp430::usci::uart
             *rx;
     }
 
+    /** Returns true if the receive buffer has a new character.
+     *
+     * \param module USCI module to query.
+     */
     inline bool has_data(const Module module)
     {
         return *interrupt::registers::IFG2 & usci::RXIFG[(uint8_t) module];
     }
 
+    /** Synchronously read a character from UART.
+     *
+     * Read a character from the UART receive buffer.
+     * If no character is ready to be retrieved, this function blocks until one is.
+     * It is more likely to be convenient to use the overload of this function only requiring the USCI module.
+     *
+     * \param status_register Address of the USCI module's status register.
+     * \param rx_buffer Address of the USCI module's status register.
+     * \param rx_flag_mask Interrupt flag mask signalling a character is ready.
+     */
     inline uint8_t read(volatile const uint8_t* const status_register,
                         volatile const uint8_t* const rx_buffer,
                         const uint8_t rx_flag_mask)
@@ -164,12 +251,34 @@ namespace mardev::msp430::usci::uart
         return *rx_buffer;
     }
 
+    /** Synchronously read a character from UART.
+     *
+     * Read a character from the UART receive buffer.
+     * If no character is ready to be retrieved, this function blocks until one is.
+     *
+     * \param module USCI module to read a character from.
+     */
     uint8_t read(const Module module);
 
+    /** Synchronously read a number of characters from UART.
+     *
+     * Reads the specified number of characters from the UART.
+     * Blocks until the max_length is reached.
+     *
+     * \param module USCI module to read a character from.
+     * \param buffer Buffer to write read characters to.
+     * \param max_length Number of characters to read into the buffer.
+     */
     uint16_t read(const Module module,
                   uint8_t* const buffer,
                   const uint16_t max_length);
 
+    /** Synchronously write characters to the UART.
+     *
+     * \param module USCI module to write characters to.
+     * \param data Data to be written.
+     * \param length Number of bytes to write.
+     */
     void write(const Module module,
                const uint8_t* const data,
                const uint16_t length);
