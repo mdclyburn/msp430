@@ -150,6 +150,11 @@ namespace mardev::msp430::usci::uart
             *rx;
     }
 
+    inline bool has_data(const Module module)
+    {
+        return *interrupt::registers::IFG2 & usci::RXIFG[(uint8_t) module];
+    }
+
     inline uint8_t read(volatile const uint8_t* const status_register,
                         volatile const uint8_t* const rx_buffer,
                         const uint8_t rx_flag_mask)

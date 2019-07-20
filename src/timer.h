@@ -47,10 +47,10 @@ namespace mardev::msp430::timer
     /** Input divider */
     enum class ID : uint16_t
     {
-        d1 = 0,
-        d2 = 1 << 6,
-        d4 = 2 << 6,
-        d8 = 3 << 6
+        D1 = 0,
+        D2 = 1 << 6,
+        D4 = 2 << 6,
+        D8 = 3 << 6
     };
 
     /** Mode control */
@@ -72,9 +72,19 @@ namespace mardev::msp430::timer
             | (uint16_t) divider;
     }
 
-    inline void stop()
+    inline void reset()
     {
         *registers::TACTL |= TACLR;
+    }
+
+    inline uint16_t count()
+    {
+        return *registers::TAR;
+    }
+
+    inline void reset_count()
+    {
+        *registers::TAR = 0;
     }
 
     inline void set_signal_source(const TASSEL s)
@@ -90,11 +100,6 @@ namespace mardev::msp430::timer
     inline void disable_interrupts()
     {
         *registers::TACTL |= TAIE;
-    }
-
-    inline uint16_t value()
-    {
-        return *registers::TAR;
     }
 
     // ===== Timer Capture/Control
