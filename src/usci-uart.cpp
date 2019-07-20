@@ -7,6 +7,7 @@ namespace mardev::msp430::usci::uart
     namespace dio = mardev::msp430::digital_io;
 
     const uint8_t UCBRK  = 0x08;
+    const uint8_t UCRXERR = 0x04;
     const uint8_t UCIDLE = 0x02;
 
     const uint8_t RXD[] = { 3 };
@@ -38,17 +39,14 @@ namespace mardev::msp430::usci::uart
         volatile const uint8_t* const rx_buffer = usci::registers::RXBUF[(uint8_t) module];
         const uint8_t rx_flag = usci::RXIFG[(uint8_t) module];
 
-        // Receive data until idle.
         uint16_t len = 0;
-        uint8_t* out = buffer;
         do
         {
             // Wait for input from peripheral.
             while(!(*interrupt::registers::IFG2 & rx_flag));
 
-            *(out + len) = *rx_buffer;
-            len++;
-        } while(len < max_length);
+            buffer[len++] = *rx_buffer;
+        } while(len < max_length && !(*status & UCRXERR));
 
         return len;
     }
