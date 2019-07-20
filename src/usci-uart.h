@@ -155,6 +155,12 @@ namespace mardev::msp430::usci::uart
         *mctl = config;
     }
 
+    inline void clear_errors(const Module module)
+    {
+        volatile uint8_t* const stat = usci::registers::STAT[(uint8_t) module];
+        *stat &= 254;
+    }
+
     void write(const Module module,
                const uint8_t* const data,
                const uint16_t length);
