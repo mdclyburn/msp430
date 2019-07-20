@@ -40,7 +40,7 @@ namespace mardev::msp430::usci::spi
             // | (uint8_t) character_length // See the UC7BIT declaration...
             | (uint8_t) UCMST::Master // Assume master mode.
             | (uint8_t) spi_mode
-            | 1; // Ensure synchronous mode enabled.
+            | usci::UCSYNC; // Ensure synchronous mode enabled.
 
         *ctl1 &= ~usci::UCSWRST;
 

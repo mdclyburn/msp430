@@ -52,6 +52,9 @@ namespace mardev::msp430::usci::uart
 
     inline void enable(const Module module)
     {
+        volatile uint8_t* const ctl0 = usci::registers::CTL0[(uint8_t) module];
+        *ctl0 &= ~usci::UCSYNC;
+
         const uint8_t pin_rxd = RXD[(uint8_t) module];
         const uint8_t pin_txd = TXD[(uint8_t) module];
         dio::set_pin_mode(pin_rxd, dio::IO::Input, dio::Function::Secondary);

@@ -73,6 +73,7 @@ namespace mardev::msp430::usci
 
     // USCI control register 0 masks
     const uint8_t UCMODEx = 0x06;
+    const uint8_t UCSYNC  = 0x01;
 
     // USCI control register 1 masks
     const uint8_t UCSSELx = 0xC0;
@@ -95,13 +96,6 @@ namespace mardev::msp430::usci
     {
         A0 = 0,
         B0 = 1
-    };
-
-    /** Synchronous mode enable */
-    enum class UCSYNC : uint8_t
-    {
-        Asynchronous = 0x00,
-        Synchronous  = 0x01
     };
 }
 
