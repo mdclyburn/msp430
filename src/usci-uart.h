@@ -12,6 +12,17 @@ namespace mardev::msp430::usci::uart
     // Control register 0
     const uint8_t UCSSEL = 0x03 << 6;
 
+    // UCAxSTAT Status register masks
+    const uint8_t UCLISTEN = 0x40;
+    const uint8_t UCFE     = 0x30;
+    const uint8_t UCOE     = 0x20;
+    const uint8_t UCPE     = 0x10;
+    const uint8_t UCBRK    = 0x08;
+    const uint8_t UCRXERR  = 0x04;
+    const uint8_t UCADDR   = 0x02;
+    const uint8_t UCIDLE   = 0x02;
+    const uint8_t UCBUSY   = 0x01;
+
     // Modulation control register
     const uint8_t UCBRFx = 0x80;
     const uint8_t UCBRSx = 0x07 << 1;
@@ -127,6 +138,15 @@ namespace mardev::msp430::usci::uart
     {
         volatile uint8_t* const stat = usci::registers::STAT[(uint8_t) module];
         *stat &= 254;
+    }
+
+    inline uint8_t read(volatile const uint8_t* const status_register,
+                        volatile const uint8_t* const rx_buffer,
+                        const uint8_t rx_flag_mask)
+    {
+        while(!(*status_register & UCRXERR)
+              && !(*interrupt::registers::IFG2 & rx_flag_mask));
+        return *rx_buffer;
     }
 
     uint8_t read(const Module module);

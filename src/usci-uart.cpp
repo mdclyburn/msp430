@@ -6,17 +6,6 @@ namespace mardev::msp430::usci::uart
 {
     namespace dio = mardev::msp430::digital_io;
 
-    // UCAxSTAT Status register masks
-    const uint8_t UCLISTEN = 0x40;
-    const uint8_t UCFE     = 0x30;
-    const uint8_t UCOE     = 0x20;
-    const uint8_t UCPE     = 0x10;
-    const uint8_t UCBRK    = 0x08;
-    const uint8_t UCRXERR  = 0x04;
-    const uint8_t UCADDR   = 0x02;
-    const uint8_t UCIDLE   = 0x02;
-    const uint8_t UCBUSY   = 0x01;
-
     // USCI UART pin mapping
     const uint8_t RXD[] = { 3 };
     const uint8_t TXD[] = { 4 };
@@ -27,8 +16,7 @@ namespace mardev::msp430::usci::uart
         volatile const uint8_t* const rx_buffer = usci::registers::RXBUF[(uint8_t) module];
         const uint8_t rx_flag = usci::RXIFG[(uint8_t) module];
 
-        // Wait for input from UART.
-        while(!(*status & UCRXERR) && !(*interrupt::registers::IFG2 & rx_flag));
+        read(status, rx_buffer, rx_flag);
 
         return *rx_buffer;
     }
