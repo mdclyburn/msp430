@@ -129,13 +129,15 @@ namespace mardev::msp430::usci::uart
         *stat &= 254;
     }
 
-    void write(const Module module,
-               const uint8_t* const data,
-               const uint16_t length);
+    uint8_t read(const Module module);
 
     uint16_t read(const Module module,
                   uint8_t* const buffer,
                   const uint16_t max_length);
+
+    void write(const Module module,
+               const uint8_t* const data,
+               const uint16_t length);
 }
 
 #endif
