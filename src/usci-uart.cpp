@@ -6,10 +6,18 @@ namespace mardev::msp430::usci::uart
 {
     namespace dio = mardev::msp430::digital_io;
 
-    const uint8_t UCBRK  = 0x08;
-    const uint8_t UCRXERR = 0x04;
-    const uint8_t UCIDLE = 0x02;
+    // UCAxSTAT Status register masks
+    const uint8_t UCLISTEN = 0x40;
+    const uint8_t UCFE     = 0x30;
+    const uint8_t UCOE     = 0x20;
+    const uint8_t UCPE     = 0x10;
+    const uint8_t UCBRK    = 0x08;
+    const uint8_t UCRXERR  = 0x04;
+    const uint8_t UCADDR   = 0x02;
+    const uint8_t UCIDLE   = 0x02;
+    const uint8_t UCBUSY   = 0x01;
 
+    // USCI UART pin mapping
     const uint8_t RXD[] = { 3 };
     const uint8_t TXD[] = { 4 };
 
