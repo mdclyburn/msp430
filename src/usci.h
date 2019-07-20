@@ -31,6 +31,9 @@ namespace mardev::msp430::usci
         volatile const uint8_t* const UCA0RXBUF = (const uint8_t* const) 0x66;
         volatile uint8_t* const       UCA0TXBUF = (uint8_t* const) 0x67;
 
+        // Auto baud control
+        volatile uint8_t* const UCA0BCTL = (uint8_t* const) 0x5D;
+
         // ===== USCI_B0 Control and Status Registers
         // Control
         volatile uint8_t* const UCB0CTL0 = (uint8_t* const) 0x68;
@@ -54,6 +57,8 @@ namespace mardev::msp430::usci
         extern volatile uint8_t* const BR0[];
         extern volatile uint8_t* const BR1[];
 
+        extern volatile uint8_t* const MCTL[];
+
         extern volatile uint8_t* const STAT[];
 
         extern volatile const uint8_t* const RXBUF[];
@@ -68,6 +73,7 @@ namespace mardev::msp430::usci
 
     // USCI control register 0 masks
     const uint8_t UCMODEx = 0x06;
+    const uint8_t UCSYNC  = 0x01;
 
     // USCI control register 1 masks
     const uint8_t UCSSELx = 0xC0;
@@ -90,15 +96,6 @@ namespace mardev::msp430::usci
     {
         A0 = 0,
         B0 = 1
-    };
-
-    /** USCI mode select */
-    enum class UCMODE : uint8_t
-    {
-        SPI3     = 0x00,
-        SPI4High = 0x01 << 1,
-        SPI4Low  = 0x02 << 1,
-        I2C      = 0x03 << 1
     };
 }
 

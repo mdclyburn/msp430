@@ -10,6 +10,8 @@ namespace mardev::msp430::usci
         volatile uint8_t* const BR0[]  =  { UCA0BR0, UCB0BR0 };
         volatile uint8_t* const BR1[]  =  { UCA0BR1, UCB0BR1 };
 
+        volatile uint8_t* const MCTL[] = { UCA0MCTL };
+
         volatile uint8_t* const STAT[] =  { UCA0STAT, UCB0STAT };
 
         const volatile uint8_t* const RXBUF[] = { UCA0RXBUF, UCB0RXBUF };

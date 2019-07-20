@@ -12,8 +12,8 @@ namespace mardev::msp430::usci::spi
     const uint8_t MOSI[] = { 4, 15 };
     const uint8_t MISO[] = { 3, 14 };
 
-    void initialize(const usci::Module module,
-                    const usci::UCMODE spi_mode,
+    void initialize(const Module module,
+                    const UCMODE spi_mode,
                     const UCSSELx clock_source,
                     const UCCKPH clock_phase,
                     const UCCKPL clock_polarity,
@@ -40,14 +40,14 @@ namespace mardev::msp430::usci::spi
             // | (uint8_t) character_length // See the UC7BIT declaration...
             | (uint8_t) UCMST::Master // Assume master mode.
             | (uint8_t) spi_mode
-            | 1; // Ensure synchronous mode enabled.
+            | usci::UCSYNC; // Ensure synchronous mode enabled.
 
         *ctl1 &= ~usci::UCSWRST;
 
         return;
     }
 
-    uint8_t write(const usci::Module module,
+    uint8_t write(const Module module,
                   const uint8_t data)
     {
         volatile const uint8_t tx_flag = usci::TXIFG[(uint8_t) module];
