@@ -78,9 +78,12 @@ namespace mardev::msp430::clock
      */
     inline void apply_dco_preset(const DCOPreset preset)
     {
-        const uint16_t* const loc = (const uint16_t*) preset;
-        *registers::DCOCTL = *loc;
-        *registers::BCSCTL1 = *(loc + 1);
+        const uint8_t* const preset_tlv_loc = (const uint8_t*) preset;
+        const uint8_t dco_preset_calibration = preset_tlv_loc[0];
+        const uint8_t bcs_preset_calibration = preset_tlv_loc[1];
+
+        *registers::DCOCTL = dco_preset_calibration;
+        *registers::BCSCTL1 = bcs_preset_calibration;
     }
 
     /** Set the source for the sub-system master clock signal.
