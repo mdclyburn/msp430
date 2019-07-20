@@ -97,15 +97,6 @@ namespace mardev::msp430::usci
         B0 = 1
     };
 
-    /** USCI mode select */
-    enum class UCMODE : uint8_t
-    {
-        SPI3     = 0x00,
-        SPI4High = 0x01 << 1,
-        SPI4Low  = 0x02 << 1,
-        I2C      = 0x03 << 1
-    };
-
     /** Synchronous mode enable */
     enum class UCSYNC : uint8_t
     {

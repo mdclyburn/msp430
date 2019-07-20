@@ -14,6 +14,22 @@ namespace mardev::msp430::usci::spi
 {
     namespace usci = mardev::msp430::usci;
 
+    /** SPI module */
+    enum class Module : uint8_t
+    {
+        A0 = 0,
+        B0 = 1
+    };
+
+    /** USCI mode select */
+    enum class UCMODE : uint8_t
+    {
+        SPI3     = 0x00,
+        SPI4High = 0x01 << 1,
+        SPI4Low  = 0x02 << 1,
+        I2C      = 0x03 << 1
+    };
+
     /** Clock phase select
      *
      * This is backwards from the spec.
@@ -84,8 +100,8 @@ namespace mardev::msp430::usci::spi
      *                       Note that UCCKPH uses CPHA = 0 for UCCKPH::P0 (correcting MSP430's setting).
      * \param first_bit Set the bit orientation of data.
      */
-    void initialize(const usci::Module module,
-                    const usci::UCMODE spi_mode,
+    void initialize(const Module module,
+                    const UCMODE spi_mode,
                     const UCSSELx clock_source,
                     const UCCKPH clock_phase,
                     const UCCKPL clock_polarity,
@@ -98,7 +114,7 @@ namespace mardev::msp430::usci::spi
      *
      * \param module SPI module to reset.
      */
-    inline void reset(const usci::Module module)
+    inline void reset(const Module module)
     {
         *usci::registers::CTL1[(uint8_t) module] |= usci::UCSWRST;
         return;
@@ -113,7 +129,7 @@ namespace mardev::msp430::usci::spi
      * \param module SPI module to send data with.
      * \param data Data to be sent over SPI.
      */
-    uint8_t write(const usci::Module module,
+    uint8_t write(const Module module,
                   const uint8_t data);
 }
 
