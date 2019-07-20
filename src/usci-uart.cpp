@@ -32,11 +32,8 @@ namespace mardev::msp430::usci::uart
         uint16_t len = 0;
         do
         {
-            // Wait for input from peripheral.
-            while(!(*interrupt::registers::IFG2 & rx_flag));
-
-            buffer[len++] = *rx_buffer;
-        } while(len < max_length && !(*status & UCRXERR));
+            buffer[len++] = read(status, rx_buffer, rx_flag);
+        } while(len < max_length);
 
         return len;
     }
