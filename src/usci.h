@@ -8,6 +8,8 @@
 
 #include <stdint.h>
 
+#include "interrupt.h"
+
 namespace mardev::msp430::usci
 {
     namespace registers
