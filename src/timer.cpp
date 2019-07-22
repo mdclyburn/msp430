@@ -61,9 +61,9 @@ namespace mardev::msp430::timer
                 ticks = 12000;
             }
 
-            start(MC::Up, TASSEL::ACLK, ID::d1);
+            start(MC::Up, TASSEL::ACLK, ID::D1);
             while(*registers::TAR < ticks);
-            stop();
+            reset();
 
             counted += ticks;
         }

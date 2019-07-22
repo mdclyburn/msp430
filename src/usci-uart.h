@@ -282,6 +282,17 @@ namespace mardev::msp430::usci::uart
     void write(const Module module,
                const uint8_t* const data,
                const uint16_t length);
+
+    /** Indefinitely wait until UART is idle.
+     *
+     * Waits for the specified delay and checks for errors in the UART.
+     * If errors are detected (peripheral transmitted something), clears them and restarts the wait.
+     *
+     * \param module USCI module to await an idle state for.
+     * \param delay Milliseconds of idle time necessary to satisfy the condition.
+     */
+    void wait_for_idle(const Module module,
+                       const uint16_t delay);
 }
 
 #endif

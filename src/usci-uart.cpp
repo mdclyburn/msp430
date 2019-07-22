@@ -1,5 +1,6 @@
 #include "digital-io.h"
 #include "interrupt.h"
+#include "timer.h"
 #include "usci-uart.h"
 
 namespace mardev::msp430::usci::uart
@@ -51,6 +52,21 @@ namespace mardev::msp430::usci::uart
             // Wait for buffer to empty.
             while(!(*interrupt::registers::IFG2 & tx_flag));
             *tx_buffer = data[transmitted_bytes++];
+        }
+
+        return;
+    }
+
+    void wait_for_idle(const uart::Module module,
+                       const uint16_t delay)
+    {
+        while(true)
+        {
+            timer::delay(delay);
+            if(errors(module))
+                clear_errors(module);
+            else
+                break;
         }
 
         return;
