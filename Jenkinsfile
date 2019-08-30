@@ -16,9 +16,9 @@ pipeline {
         stash(name: 'docs-web', includes: 'web.tar')
       }
 
-      when {
-        branch 'master';
-      }
+      // when {
+      //   branch 'master';
+      // }
 
       post {
         always {
