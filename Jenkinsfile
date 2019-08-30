@@ -7,13 +7,15 @@ pipeline {
     stage('Documentation') {
       steps {
         sh 'doxygen >/dev/null'
-        dir ('latex') {
-          sh 'latexmk -pdf -dvi- -quiet refman.tex'
-          stash(name: 'docs-pdf', includes: 'refman.pdf')
-        }
+        dir ('doc') {
+          dir ('latex') {
+            sh 'latexmk -pdf -dvi- -quiet refman.tex'
+            stash(name: 'docs-pdf', includes: 'refman.pdf')
+          }
 
-        sh 'tar -cf web.tar -C html .'
-        stash(name: 'docs-web', includes: 'web.tar')
+          sh 'tar -cf web.tar -C html .'
+          stash(name: 'docs-web', includes: 'web.tar')
+        }
       }
 
       // when {
