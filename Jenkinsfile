@@ -18,9 +18,9 @@ pipeline {
         }
       }
 
-      // when {
-      //   branch 'master';
-      // }
+      when {
+        branch 'master';
+      }
 
       post {
         always {
@@ -64,6 +64,10 @@ pipeline {
             sh 'rm -f web.tar'
           }
         }
+      }
+
+      when {
+        branch 'master'
       }
     }
   }
