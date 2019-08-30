@@ -37,7 +37,9 @@ pipeline {
 
       post {
         always {
-          sh 'make clean'
+          dir ('src') {
+            sh 'make clean'
+          }
         }
       }
     }
