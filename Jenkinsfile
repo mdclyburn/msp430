@@ -43,5 +43,26 @@ pipeline {
         }
       }
     }
+
+    stage('Publish') {
+      agent { node { label 'www' } }
+      steps {
+        script {
+          DEPLOY_DIR = '/usr/local/www/build_exports/mdl-msp430'
+        }
+
+        dir ("${DEPLOY_DIR}/docs") {
+          sh 'rm -f *'
+          unstash(name: 'docs-pdf')
+
+          sh "rm -rf web"
+          dir ('web') {
+            unstash(name: 'docs-web')
+            sh 'tar -xf web.tar'
+            sh 'rm -f web.tar'
+          }
+        }
+      }
+    }
   }
 }
