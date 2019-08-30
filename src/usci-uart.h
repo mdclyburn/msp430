@@ -1,6 +1,6 @@
 /** @file
  *
- * USCI UART implementation.
+ * Universal Serial Communication Interface - Universal Asynchronous Receiver-Transmitter (UART)
  */
 
 #ifndef MDL_MSP430_USCI_UART_H

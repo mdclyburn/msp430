@@ -1,6 +1,6 @@
 /** @file
  *
- * Timer functions
+ * Timer
  */
 
 #ifndef MDL_MSP430_TIMER_H

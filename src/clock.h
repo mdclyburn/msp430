@@ -1,6 +1,6 @@
 /** @file
  *
- * Clock functions
+ * Basic Clock Module+
  */
 
 #ifndef MDL_MSP430_CLOCK_H

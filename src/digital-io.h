@@ -1,7 +1,7 @@
 /**
  * @file
  *
- * Digital I/O.
+ * Digital I/O
  *
  * Manipulates digital I/O.
  * Each pin can be configured for input or output with set_pin_mode().

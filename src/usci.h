@@ -1,6 +1,6 @@
 /** @file
  *
- * USCI functions
+ * Universal Serial Communication Interface
  */
 
 #ifndef MDL_MSP430_USCI_H

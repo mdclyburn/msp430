@@ -1,6 +1,6 @@
 /** @file
  *
- * USCI Serial Peripheral Interface functions
+ * Universal Serial Communication Interface - Serial Peripheral Interface (SPI)
  */
 
 #ifndef MDL_MSP430_USCISPI_H

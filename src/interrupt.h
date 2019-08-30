@@ -1,6 +1,8 @@
 /** @file
  *
- * Interrupt functions
+ * Interrupts
+ *
+ * Code to support utilizing the interrupt functionality of the MSP430.
  */
 
 #ifndef MDL_MSP430_INTERRUPT_H
