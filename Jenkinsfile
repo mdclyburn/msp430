@@ -54,10 +54,10 @@ pipeline {
         }
 
         dir ("${DEPLOY_DIR}/docs") {
-          sh 'rm -f *'
+          sh 'rm -rf *'
+
           unstash(name: 'docs-pdf')
 
-          sh "rm -rf web"
           dir ('web') {
             unstash(name: 'docs-web')
             sh 'tar -xf web.tar'
