@@ -70,4 +70,21 @@ namespace mardev::msp430::timer
 
         return;
     }
+
+    void delay(const uint16_t counts,
+               const uint16_t ticks_per_count,
+               const TASSEL source)
+    {
+        reset();
+        *registers::TACCR0 = 65535;
+
+        for(uint16_t i = 0; i < counts; i++)
+        {
+            start(MC::Up, source, ID::D1);
+            while(*registers::TAR < 32768);
+            reset();
+        }
+
+        return;
+    }
 }

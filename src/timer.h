@@ -8,6 +8,10 @@
 
 #include <stdint.h>
 
+#include "clock.h"
+
+namespace clock = mardev::msp430::clock;
+
 namespace mardev::msp430::timer
 {
     namespace registers
@@ -141,6 +145,12 @@ namespace mardev::msp430::timer
     /** Use TACCR0 to wait a specified amount of time.
      */
     void delay(const uint16_t milliseconds);
+
+    /** Use TACCR0 to wait a specified amount of time.
+     */
+    void delay(const uint16_t count,
+               const uint16_t ticks_per_count,
+               const TASSEL source);
 }
 
 #endif
