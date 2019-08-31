@@ -83,10 +83,12 @@ namespace mardev::msp430::digital_io
             *port_select_2[port] &= ~port_mask;
             break;
         case Function::Primary: // Select primary peripheral module function.
-            *port_select[port] &= ~port_mask;
-            *port_select_2[port] |= port_mask;
+            *port_select[port] |= port_mask;
+            *port_select_2[port] &= ~port_mask;
             break;
         case Function::Special: // Reserved. This is a device-specific setting.
+            *port_select[port] &= ~port_mask;
+            *port_select_2[port] |= port_mask;
             break;
         case Function::Secondary: // Select secondary peripheral module function.
             *port_select[port] |= port_mask;
