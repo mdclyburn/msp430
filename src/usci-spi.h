@@ -14,6 +14,20 @@ namespace mardev::msp430::usci::spi
 {
     namespace usci = mardev::msp430::usci;
 
+    namespace registers::masks
+    {
+        const uint8_t UCCKPH = 0b10000000;
+        const uint8_t UCCKPL = 0b01000000;
+        const uint8_t UCMSB  = 0b00100000;
+        const uint8_t UC7BIT = 0b00010000;
+        const uint8_t UCMST  = 0b00001000;
+        const uint8_t UCMODE = 0b00000110;
+        const uint8_t UCSYNC = 0b00000001;
+
+        const uint8_t UCSSEL  = 0b11000000;
+        const uint8_t UCSWRST = 0b00000001;
+    }
+
     /** SPI module */
     enum class Module : uint8_t
     {
