@@ -14,7 +14,7 @@ namespace mardev::msp430::usci::spi
 
     void initialize(const Module module,
                     const UCMODE spi_mode,
-                    const UCSSELx clock_source,
+                    const UCSSEL clock_source,
                     const UCCKPH clock_phase,
                     const UCCKPL clock_polarity,
                     const UCMSB first_bit)
@@ -65,5 +65,22 @@ namespace mardev::msp430::usci::spi
         while(!(*interrupt::registers::IFG2 & rx_flag));
 
         return *rx_buffer;
+    }
+
+    void enable(const Module m)
+    {
+        // Configure pins.
+        dio::set_pin_mode(SCLK[(uint8_t) m], dio::IO::Output, dio::Function::Secondary);
+        dio::set_pin_mode(MOSI[(uint8_t) m], dio::IO::Output, dio::Function::Secondary);
+        dio::set_pin_mode(MISO[(uint8_t) m], dio::IO::Output, dio::Function::Secondary);
+
+        auto ctl0 = get_ctl0(m);
+        auto ctl1 = get_ctl1(m);
+
+        // Assume master mode, ensure synchronous mode.
+        *ctl0 |= (uint8_t) UCMST::Master | (uint8_t) usci::UCSYNC;
+        *ctl1 &= ~usci::UCSWRST;
+
+        return;
     }
 }
