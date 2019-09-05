@@ -28,6 +28,11 @@ namespace mardev::msp430::usci::spi
         const uint8_t UCSWRST = 0b00000001;
     }
 
+    // Mapping module -> pin number
+    extern const uint8_t SCLK[];
+    extern const uint8_t MOSI[];
+    extern const uint8_t MISO[];
+
     /** SPI module */
     enum class Module : uint8_t
     {
@@ -93,11 +98,6 @@ namespace mardev::msp430::usci::spi
         ACLK   = 0x40,
         SMCLK  = 0x80
     };
-
-    // Mapping module -> pin number
-    extern const uint8_t SCLK[];
-    extern const uint8_t MOSI[];
-    extern const uint8_t MISO[];
 
     inline volatile uint8_t* const get_ctl0(const Module m)
     {
