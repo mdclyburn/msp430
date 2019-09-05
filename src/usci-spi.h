@@ -129,7 +129,7 @@ namespace mardev::msp430::usci::spi
     inline void set_clock_source(const Module m,
                                  const UCSSEL source)
     {
-        volatile uint8_t* const ctl0 = get_ctl0(m);
+        volatile uint8_t* const ctl0 = get_ctl1(m);
         *ctl0 = (*ctl0 & ~registers::masks::UCSSEL) | (uint8_t) source;
 
         return;
