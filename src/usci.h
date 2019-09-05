@@ -69,11 +69,11 @@ namespace mardev::msp430::usci
         namespace masks
         {
             // USCI control register 0 masks
-            const uint8_t UCMODEx = 0x06;
+            const uint8_t UCMODE = 0x06;
             const uint8_t UCSYNC  = 0x01;
 
             // USCI control register 1 masks
-            const uint8_t UCSSELx = 0xC0;
+            const uint8_t UCSSEL = 0xC0;
             const uint8_t UCSWRST = 0x01;
 
             // Interrupt Enable register masks
