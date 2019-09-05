@@ -87,34 +87,14 @@ namespace mardev::msp430::usci
             const uint8_t UCB0RXIFG = 0x04;
             const uint8_t UCA0TXIFG = 0x02;
             const uint8_t UCA0RXIFG = 0x01;
+
+            // Mapping USCI module -> register mask
+            extern uint8_t const RXIE[];
+            extern uint8_t const TXIE[];
+            extern uint8_t const RXIFG[];
+            extern uint8_t const TXIFG[];
         }
     }
-
-    // Mapping USCI module -> register mask
-    extern uint8_t const RXIE[];
-    extern uint8_t const TXIE[];
-    extern uint8_t const RXIFG[];
-    extern uint8_t const TXIFG[];
-
-    // USCI control register 0 masks
-    const uint8_t UCMODEx = 0x06;
-    const uint8_t UCSYNC  = 0x01;
-
-    // USCI control register 1 masks
-    const uint8_t UCSSELx = 0xC0;
-    const uint8_t UCSWRST = 0x01;
-
-    // Interrupt Enable register masks
-    const uint8_t UCB0TXIE = 0x08;
-    const uint8_t UCB0RXIE = 0x04;
-    const uint8_t UCA0TXIE = 0x02;
-    const uint8_t UCA0RXIE = 0x01;
-
-    // Interrupt Flag 2 register masks
-    const uint8_t UCB0TXIFG = 0x08;
-    const uint8_t UCB0RXIFG = 0x04;
-    const uint8_t UCA0TXIFG = 0x02;
-    const uint8_t UCA0RXIFG = 0x01;
 
     /** USCI module */
     enum class Module : uint8_t

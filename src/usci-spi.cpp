@@ -23,8 +23,8 @@ namespace mardev::msp430::usci::spi
         auto ctl1 = get_ctl1(m);
 
         // Assume master mode, ensure synchronous mode.
-        *ctl0 |= (uint8_t) UCMST::Master | (uint8_t) usci::UCSYNC;
-        *ctl1 &= ~usci::UCSWRST;
+        *ctl0 |= (uint8_t) UCMST::Master | (uint8_t) usci::registers::masks::UCSYNC;
+        *ctl1 &= ~usci::registers::masks::UCSWRST;
 
         return;
     }
@@ -32,8 +32,8 @@ namespace mardev::msp430::usci::spi
     uint8_t write(const Module module,
                   const uint8_t data)
     {
-        volatile const uint8_t tx_flag = usci::TXIFG[(uint8_t) module];
-        volatile const uint8_t rx_flag = usci::RXIFG[(uint8_t) module];
+        volatile const uint8_t tx_flag = usci::registers::masks::TXIFG[(uint8_t) module];
+        volatile const uint8_t rx_flag = usci::registers::masks::RXIFG[(uint8_t) module];
         volatile uint8_t* const tx_buffer = usci::registers::TXBUF[(uint8_t) module];
         volatile const uint8_t* const rx_buffer = usci::registers::RXBUF[(uint8_t) module];
 

@@ -111,7 +111,7 @@ namespace mardev::msp430::usci::spi
 
     inline void reset(const Module m)
     {
-        *get_ctl1(m) |= usci::UCSWRST;
+        *get_ctl1(m) |= usci::registers::masks::UCSWRST;
         return;
     }
 

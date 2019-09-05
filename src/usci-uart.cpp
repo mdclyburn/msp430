@@ -15,7 +15,7 @@ namespace mardev::msp430::usci::uart
     {
         volatile const uint8_t* const status = usci::registers::STAT[(uint8_t) module];
         volatile const uint8_t* const rx_buffer = usci::registers::RXBUF[(uint8_t) module];
-        const uint8_t rx_flag = usci::RXIFG[(uint8_t) module];
+        const uint8_t rx_flag = usci::registers::masks::RXIFG[(uint8_t) module];
 
         read(status, rx_buffer, rx_flag);
 
@@ -28,7 +28,7 @@ namespace mardev::msp430::usci::uart
     {
         volatile const uint8_t* const status = usci::registers::STAT[(uint8_t) module];
         volatile const uint8_t* const rx_buffer = usci::registers::RXBUF[(uint8_t) module];
-        const uint8_t rx_flag = usci::RXIFG[(uint8_t) module];
+        const uint8_t rx_flag = usci::registers::masks::RXIFG[(uint8_t) module];
 
         uint16_t len = 0;
         do
@@ -44,7 +44,7 @@ namespace mardev::msp430::usci::uart
                const uint16_t length)
     {
         volatile uint8_t* const tx_buffer = usci::registers::TXBUF[(uint8_t) module];
-        const uint8_t tx_flag = usci::TXIFG[(uint8_t) module];
+        const uint8_t tx_flag = usci::registers::masks::TXIFG[(uint8_t) module];
 
         uint16_t transmitted_bytes = 0;
         while(transmitted_bytes < length)

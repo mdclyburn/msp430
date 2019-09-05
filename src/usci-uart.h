@@ -67,7 +67,7 @@ namespace mardev::msp430::usci::uart
     inline void reset(const Module module)
     {
         volatile uint8_t* const ctl1 = usci::registers::CTL1[(uint8_t) module];
-        *ctl1 |= usci::UCSWRST;
+        *ctl1 |= usci::registers::masks::UCSWRST;
     }
 
     /** Enable the USCI module for use as a UART.
@@ -81,7 +81,7 @@ namespace mardev::msp430::usci::uart
     inline void enable(const Module module)
     {
         volatile uint8_t* const ctl0 = usci::registers::CTL0[(uint8_t) module];
-        *ctl0 &= ~usci::UCSYNC;
+        *ctl0 &= ~usci::registers::masks::UCSYNC;
 
         const uint8_t pin_rxd = RXD[(uint8_t) module];
         const uint8_t pin_txd = TXD[(uint8_t) module];
@@ -89,7 +89,7 @@ namespace mardev::msp430::usci::uart
         dio::set_pin_mode(pin_txd, dio::IO::Output, dio::Function::Secondary);
 
         volatile uint8_t* const ctl1 = usci::registers::CTL1[(uint8_t) module];
-        *ctl1 &= ~usci::UCSWRST;
+        *ctl1 &= ~usci::registers::masks::UCSWRST;
     }
 
     /** Sets the UART mode.
@@ -229,7 +229,7 @@ namespace mardev::msp430::usci::uart
      */
     inline bool has_data(const Module module)
     {
-        return *interrupt::registers::IFG2 & usci::RXIFG[(uint8_t) module];
+        return *interrupt::registers::IFG2 & usci::registers::masks::RXIFG[(uint8_t) module];
     }
 
     /** Synchronously read a character from UART.
