@@ -95,13 +95,6 @@ namespace mardev::msp430::usci
             extern uint8_t const TXIFG[];
         }
     }
-
-    /** USCI module */
-    enum class Module : uint8_t
-    {
-        A0 = 0,
-        B0 = 1
-    };
 }
 
 #endif
