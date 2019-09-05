@@ -43,10 +43,10 @@ namespace mardev::msp430::usci::spi
     /** USCI mode select */
     enum class UCMODE : uint8_t
     {
-        SPI3     = 0x00,
-        SPI4High = 0x01 << 1,
-        SPI4Low  = 0x02 << 1,
-        I2C      = 0x03 << 1
+        SPI3     = 0b00000000,
+        SPI4High = 0b00000010,
+        SPI4Low  = 0b00000100,
+        I2C      = 0b00000110
     };
 
     /** Clock phase select
@@ -55,22 +55,22 @@ namespace mardev::msp430::usci::spi
      */
     enum class UCCKPH : uint8_t
     {
-        P0 = 0x80,
-        P1 = 0x00
+        P0 = 0b10000000,
+        P1 = 0b00000000
     };
 
     /** Clock polarity select */
     enum class UCCKPL : uint8_t
     {
-        P0 = 0x00,
-        P1 = 0x40
+        P0 = 0b00000000,
+        P1 = 0b01000000
     };
 
     /** Endianness select */
     enum class UCMSB : uint8_t
     {
-        LSBFirst = 0x00,
-        MSBFirst = 0x20
+        LSBFirst = 0b00000000,
+        MSBFirst = 0b00100000
     };
 
     /** Character length select
@@ -80,23 +80,23 @@ namespace mardev::msp430::usci::spi
      */
     enum class UC7BIT : uint8_t
     {
-        L8 = 0x00,
-        L7 = 0x10
+        L8 = 0b00000000,
+        L7 = 0b00010000
     };
 
     /** Master/Slave mode select */
     enum class UCMST : uint8_t
     {
-        Slave =  0x00,
-        Master = 0x08
+        Slave =  0b00000000,
+        Master = 0b00001000
     };
 
     /** Clock source select */
     enum class UCSSEL : uint8_t
     {
-        NA     = 0x00,
-        ACLK   = 0x40,
-        SMCLK  = 0x80
+        NA     = 0b00000000,
+        ACLK   = 0b01000000,
+        SMCLK  = 0b10000000
     };
 
     inline volatile uint8_t* const get_ctl0(const Module m)
