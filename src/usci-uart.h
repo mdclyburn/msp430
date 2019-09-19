@@ -289,10 +289,12 @@ namespace mardev::msp430::usci::uart
      * If errors are detected (peripheral transmitted something), clears them and restarts the wait.
      *
      * \param module USCI module to await an idle state for.
-     * \param delay Milliseconds of idle time necessary to satisfy the condition.
+     * \param count Number of counts to wait for.
+     * \param ticks_per_count Number of ACLK ticks per count.
      */
     void wait_for_idle(const Module module,
-                       const uint16_t delay);
+                       const uint16_t count,
+                       const uint16_t ticks_per_count);
 }
 
 #endif

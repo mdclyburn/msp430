@@ -58,11 +58,12 @@ namespace mardev::msp430::usci::uart
     }
 
     void wait_for_idle(const uart::Module module,
-                       const uint16_t delay)
+                       const uint16_t count,
+                       const uint16_t ticks_per_count)
     {
         while(true)
         {
-            timer::delay(delay);
+            timer::delay(count, ticks_per_count, timer::TASSEL::ACLK);
             if(errors(module))
                 clear_errors(module);
             else
