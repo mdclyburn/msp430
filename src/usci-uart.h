@@ -14,24 +14,42 @@ namespace mardev::msp430::usci::uart
     namespace dio = mardev::msp430::digital_io;
     namespace usci = mardev::msp430::usci;
 
-    // Control register 0
-    const uint8_t UCSSEL = 0x03 << 6;
+    namespace registers::masks
+    {
+        // Control register 0
+        const uint8_t UCPEN   = 0b10000000;
+        const uint8_t UCPAR   = 0b01000000;
+        const uint8_t UCMSB   = 0b00100000;
+        const uint8_t UC7BIT  = 0b00010000;
+        const uint8_t UCSPB   = 0b00001000;
+        const uint8_t UCMODEx = 0b00000110;
+        const uint8_t UCSYNC  = 0b00000001;
 
-    // UCAxSTAT Status register masks
-    const uint8_t UCLISTEN = 0x40;
-    const uint8_t UCFE     = 0x30;
-    const uint8_t UCOE     = 0x20;
-    const uint8_t UCPE     = 0x10;
-    const uint8_t UCBRK    = 0x08;
-    const uint8_t UCRXERR  = 0x04;
-    const uint8_t UCADDR   = 0x02;
-    const uint8_t UCIDLE   = 0x02;
-    const uint8_t UCBUSY   = 0x01;
+        // Control register 1
+        const uint8_t UCSSELx  = 0b11000000;
+        const uint8_t UCRXEIE  = 0b00100000;
+        const uint8_t UCBRKIE  = 0b00010000;
+        const uint8_t UCDORM   = 0b00001000;
+        const uint8_t UCTXADDR = 0b00000100;
+        const uint8_t UCTXBRK  = 0b00000010;
+        const uint8_t UCSWRST  = 0b00000001;
 
-    // Modulation control register
-    const uint8_t UCBRFx = 0x80;
-    const uint8_t UCBRSx = 0x07 << 1;
-    const uint8_t UCOS16 = 0x01;
+        // UCAxSTAT Status register masks
+        const uint8_t UCLISTEN = 0b10000000;
+        const uint8_t UCFE     = 0b01000000;
+        const uint8_t UCOE     = 0b00100000;
+        const uint8_t UCPE     = 0b00010000;
+        const uint8_t UCBRK    = 0b00001000;
+        const uint8_t UCRXERR  = 0b00000100;
+        const uint8_t UCADDR   = 0b00000010;
+        const uint8_t UCIDLE   = 0b00000010;
+        const uint8_t UCBUSY   = 0b00000001;
+
+        // Modulation control register
+        const uint8_t UCBRFx = 0b11110000;
+        const uint8_t UCBRSx = 0b00001110;
+        const uint8_t UCOS16 = 0b00000001;
+    }
 
     /** USCI UART Modules */
     enum class Module : uint8_t
@@ -67,7 +85,7 @@ namespace mardev::msp430::usci::uart
     inline void reset(const Module module)
     {
         volatile uint8_t* const ctl1 = usci::registers::CTL1[(uint8_t) module];
-        *ctl1 |= usci::UCSWRST;
+        *ctl1 |= usci::registers::masks::UCSWRST;
     }
 
     /** Enable the USCI module for use as a UART.
@@ -81,7 +99,7 @@ namespace mardev::msp430::usci::uart
     inline void enable(const Module module)
     {
         volatile uint8_t* const ctl0 = usci::registers::CTL0[(uint8_t) module];
-        *ctl0 &= ~usci::UCSYNC;
+        *ctl0 &= ~usci::registers::masks::UCSYNC;
 
         const uint8_t pin_rxd = RXD[(uint8_t) module];
         const uint8_t pin_txd = TXD[(uint8_t) module];
@@ -89,7 +107,7 @@ namespace mardev::msp430::usci::uart
         dio::set_pin_mode(pin_txd, dio::IO::Output, dio::Function::Secondary);
 
         volatile uint8_t* const ctl1 = usci::registers::CTL1[(uint8_t) module];
-        *ctl1 &= ~usci::UCSWRST;
+        *ctl1 &= ~usci::registers::masks::UCSWRST;
     }
 
     /** Sets the UART mode.
@@ -129,9 +147,8 @@ namespace mardev::msp430::usci::uart
                               const bool enabled)
     {
         volatile uint8_t* r = usci::registers::CTL0[(uint8_t) module];
-        const uint8_t UCPEN = 0x80;
-        *r = *r & ~UCPEN;
-        if (enabled) *r |= UCPEN;
+        *r = *r & ~registers::masks::UCPEN;
+        if (enabled) *r |= registers::masks::UCPEN;
     }
 
     /** Use even parity.
@@ -142,8 +159,7 @@ namespace mardev::msp430::usci::uart
     inline void enable_even_parity(const Module module)
     {
         volatile uint8_t* r = usci::registers::CTL0[(uint8_t) module];
-        const uint8_t UCPAR = 0x40;
-        *r |= UCPAR;
+        *r |= registers::masks::UCPAR;
     }
 
     /** Use odd parity.
@@ -155,8 +171,7 @@ namespace mardev::msp430::usci::uart
     inline void enable_odd_parity(const Module module)
     {
         volatile uint8_t* r = usci::registers::CTL0[(uint8_t) module];
-        const uint8_t UCPAR = 0x40;
-        *r &= ~UCPAR;
+        *r &= ~registers::masks::UCPAR;
     }
 
     /** Set the divider for the bit clock.
@@ -206,7 +221,11 @@ namespace mardev::msp430::usci::uart
     inline bool errors(const Module module)
     {
         volatile uint8_t* const stat = usci::registers::STAT[(uint8_t) module];
-        return *stat & (UCFE | UCPE | UCBRK | UCOE);
+        return *stat
+            & (registers::masks::UCFE
+               | registers::masks::UCPE
+               | registers::masks::UCBRK
+               | registers::masks::UCOE);
     }
 
     /** Clear status errors.
@@ -218,8 +237,11 @@ namespace mardev::msp430::usci::uart
         volatile uint8_t* const stat = usci::registers::STAT[(uint8_t) module];
         volatile const uint8_t* const rx = usci::registers::RXBUF[(uint8_t) module];
 
-        *stat ^= UCFE | UCPE | UCBRK;
-        if (*stat & UCOE)
+        *stat ^=
+            registers::masks::UCFE
+            | registers::masks::UCPE
+            | registers::masks::UCBRK;
+        if (*stat & registers::masks::UCOE)
             *rx;
     }
 
@@ -229,7 +251,7 @@ namespace mardev::msp430::usci::uart
      */
     inline bool has_data(const Module module)
     {
-        return *interrupt::registers::IFG2 & usci::RXIFG[(uint8_t) module];
+        return *interrupt::registers::IFG2 & usci::registers::masks::RXIFG[(uint8_t) module];
     }
 
     /** Synchronously read a character from UART.
@@ -246,7 +268,7 @@ namespace mardev::msp430::usci::uart
                         volatile const uint8_t* const rx_buffer,
                         const uint8_t rx_flag_mask)
     {
-        while(!(*status_register & UCRXERR)
+        while(!(*status_register & registers::masks::UCRXERR)
               && !(*interrupt::registers::IFG2 & rx_flag_mask));
         return *rx_buffer;
     }

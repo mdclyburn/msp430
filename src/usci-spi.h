@@ -14,6 +14,25 @@ namespace mardev::msp430::usci::spi
 {
     namespace usci = mardev::msp430::usci;
 
+    namespace registers::masks
+    {
+        const uint8_t UCCKPH = 0b10000000;
+        const uint8_t UCCKPL = 0b01000000;
+        const uint8_t UCMSB  = 0b00100000;
+        const uint8_t UC7BIT = 0b00010000;
+        const uint8_t UCMST  = 0b00001000;
+        const uint8_t UCMODE = 0b00000110;
+        const uint8_t UCSYNC = 0b00000001;
+
+        const uint8_t UCSSEL  = 0b11000000;
+        const uint8_t UCSWRST = 0b00000001;
+    }
+
+    // Mapping module -> pin number
+    extern const uint8_t SCLK[];
+    extern const uint8_t MOSI[];
+    extern const uint8_t MISO[];
+
     /** SPI module */
     enum class Module : uint8_t
     {
@@ -24,10 +43,10 @@ namespace mardev::msp430::usci::spi
     /** USCI mode select */
     enum class UCMODE : uint8_t
     {
-        SPI3     = 0x00,
-        SPI4High = 0x01 << 1,
-        SPI4Low  = 0x02 << 1,
-        I2C      = 0x03 << 1
+        SPI3     = 0b00000000,
+        SPI4High = 0b00000010,
+        SPI4Low  = 0b00000100,
+        I2C      = 0b00000110
     };
 
     /** Clock phase select
@@ -36,22 +55,22 @@ namespace mardev::msp430::usci::spi
      */
     enum class UCCKPH : uint8_t
     {
-        P0 = 0x80,
-        P1 = 0x00
+        P0 = 0b10000000,
+        P1 = 0b00000000
     };
 
     /** Clock polarity select */
     enum class UCCKPL : uint8_t
     {
-        P0 = 0x00,
-        P1 = 0x40
+        P0 = 0b00000000,
+        P1 = 0b01000000
     };
 
     /** Endianness select */
     enum class UCMSB : uint8_t
     {
-        LSBFirst = 0x00,
-        MSBFirst = 0x20
+        LSBFirst = 0b00000000,
+        MSBFirst = 0b00100000
     };
 
     /** Character length select
@@ -61,62 +80,85 @@ namespace mardev::msp430::usci::spi
      */
     enum class UC7BIT : uint8_t
     {
-        L8 = 0x00,
-        L7 = 0x10
+        L8 = 0b00000000,
+        L7 = 0b00010000
     };
 
     /** Master/Slave mode select */
     enum class UCMST : uint8_t
     {
-        Slave =  0x00,
-        Master = 0x08
+        Slave =  0b00000000,
+        Master = 0b00001000
     };
 
     /** Clock source select */
-    enum class UCSSELx : uint8_t
+    enum class UCSSEL : uint8_t
     {
-        NA     = 0x00,
-        ACLK   = 0x40,
-        SMCLK  = 0x80
+        NA     = 0b00000000,
+        ACLK   = 0b01000000,
+        SMCLK  = 0b10000000
     };
 
-    // Mapping module -> pin number
-    extern const uint8_t SCLK[];
-    extern const uint8_t MOSI[];
-    extern const uint8_t MISO[];
-
-    /** Initialize an SPI module.
-     *
-     * Perform initialization steps to prepare an SPI module for use.
-     * This includes configuring the pins correctly.
-     *
-     * \param module USCI module to set up for SPI.
-     * \param spi_mode SPI mode to set up (3-pin, 4-pin).
-     * \param clock_source Where to source the clock signal from.
-     * \param clock_polarity SPI clock's idle state.
-     *                       See documentation for the peripheral being interfaced with for the correct value.
-     * \param clock_phase SPI interface bit capture and change setting.
-     *                       See documentation for the peripheral being interfaced with for the correct value.
-     *                       Note that UCCKPH uses CPHA = 0 for UCCKPH::P0 (correcting MSP430's setting).
-     * \param first_bit Set the bit orientation of data.
-     */
-    void initialize(const Module module,
-                    const UCMODE spi_mode,
-                    const UCSSELx clock_source,
-                    const UCCKPH clock_phase,
-                    const UCCKPL clock_polarity,
-                    const UCMSB first_bit);
-
-    /** Reset the SPI module settings.
-     *
-     * After this function is called, initialize() must be called to use the provided SPI module again.
-     * An SPI module cannot be used after it is placed in the reset state.
-     *
-     * \param module SPI module to reset.
-     */
-    inline void reset(const Module module)
+    inline volatile uint8_t* const get_ctl0(const Module m)
     {
-        *usci::registers::CTL1[(uint8_t) module] |= usci::UCSWRST;
+        return usci::registers::CTL0[(uint8_t) m];
+    }
+
+    inline volatile uint8_t* const get_ctl1(const Module m)
+    {
+        return usci::registers::CTL1[(uint8_t) m];
+    }
+
+    inline void reset(const Module m)
+    {
+        *get_ctl1(m) |= usci::registers::masks::UCSWRST;
+        return;
+    }
+
+    void enable(const Module m);
+
+    inline void set_mode(const Module m,
+                         const UCMODE spi_mode)
+    {
+        auto ctl0 = get_ctl0(m);
+        *ctl0 = (*ctl0 & ~registers::masks::UCMODE) | (uint8_t) spi_mode;
+
+        return;
+    }
+
+    inline void set_clock_source(const Module m,
+                                 const UCSSEL source)
+    {
+        volatile uint8_t* const ctl0 = get_ctl1(m);
+        *ctl0 = (*ctl0 & ~registers::masks::UCSSEL) | (uint8_t) source;
+
+        return;
+    }
+
+    inline void set_clock_phase(const Module m,
+                                const UCCKPH phase)
+    {
+        volatile uint8_t* const ctl0 = get_ctl0(m);
+        *ctl0 = (*ctl0 & ~registers::masks::UCCKPH) | (uint8_t) phase;
+
+        return;
+    }
+
+    inline void set_clock_polarity(const Module m,
+                                   const UCCKPL polarity)
+    {
+        volatile uint8_t* const ctl0 = get_ctl0(m);
+        *ctl0 = (*ctl0 & ~registers::masks::UCCKPL) | (uint8_t) polarity;
+
+        return;
+    }
+
+    inline void set_bit_endianness(const Module m,
+                                   const UCMSB endianness)
+    {
+        volatile uint8_t* const ctl0 = get_ctl0(m);
+        *ctl0 = (*ctl0 & ~registers::masks::UCMSB) | (uint8_t) endianness;
+
         return;
     }
 

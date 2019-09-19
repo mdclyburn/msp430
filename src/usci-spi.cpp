@@ -12,37 +12,19 @@ namespace mardev::msp430::usci::spi
     const uint8_t MOSI[] = { 4, 15 };
     const uint8_t MISO[] = { 3, 14 };
 
-    void initialize(const Module module,
-                    const UCMODE spi_mode,
-                    const UCSSELx clock_source,
-                    const UCCKPH clock_phase,
-                    const UCCKPL clock_polarity,
-                    const UCMSB first_bit)
+    void enable(const Module m)
     {
-        volatile uint8_t* const
-            ctl0 = usci::registers::CTL0[(uint8_t) module],
-            * ctl1 = usci::registers::CTL1[(uint8_t) module];
-
-        *ctl1 = (uint8_t) clock_source | usci::UCSWRST;
-
-        const uint8_t pin_clock = SCLK[(uint8_t) module],
-            pin_mosi = MOSI[(uint8_t) module],
-            pin_miso = MISO[(uint8_t) module];
-
         // Configure pins.
-        dio::set_pin_mode(pin_clock, dio::IO::Output, dio::Function::Secondary);
-        dio::set_pin_mode(pin_mosi, dio::IO::Output, dio::Function::Secondary);
-        dio::set_pin_mode(pin_miso, dio::IO::Input, dio::Function::Secondary);
+        dio::set_pin_mode(SCLK[(uint8_t) m], dio::IO::Output, dio::Function::Secondary);
+        dio::set_pin_mode(MOSI[(uint8_t) m], dio::IO::Output, dio::Function::Secondary);
+        dio::set_pin_mode(MISO[(uint8_t) m], dio::IO::Output, dio::Function::Secondary);
 
-        *ctl0 = (uint8_t) clock_phase
-            | (uint8_t) clock_polarity
-            | (uint8_t) first_bit
-            // | (uint8_t) character_length // See the UC7BIT declaration...
-            | (uint8_t) UCMST::Master // Assume master mode.
-            | (uint8_t) spi_mode
-            | usci::UCSYNC; // Ensure synchronous mode enabled.
+        auto ctl0 = get_ctl0(m);
+        auto ctl1 = get_ctl1(m);
 
-        *ctl1 &= ~usci::UCSWRST;
+        // Assume master mode, ensure synchronous mode.
+        *ctl0 |= (uint8_t) UCMST::Master | (uint8_t) usci::registers::masks::UCSYNC;
+        *ctl1 &= ~usci::registers::masks::UCSWRST;
 
         return;
     }
@@ -50,8 +32,8 @@ namespace mardev::msp430::usci::spi
     uint8_t write(const Module module,
                   const uint8_t data)
     {
-        volatile const uint8_t tx_flag = usci::TXIFG[(uint8_t) module];
-        volatile const uint8_t rx_flag = usci::RXIFG[(uint8_t) module];
+        volatile const uint8_t tx_flag = usci::registers::masks::TXIFG[(uint8_t) module];
+        volatile const uint8_t rx_flag = usci::registers::masks::RXIFG[(uint8_t) module];
         volatile uint8_t* const tx_buffer = usci::registers::TXBUF[(uint8_t) module];
         volatile const uint8_t* const rx_buffer = usci::registers::RXBUF[(uint8_t) module];
 
