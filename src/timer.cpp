@@ -29,10 +29,10 @@ namespace mardev::msp430::timer
 
         uint16_t settings =
             (uint16_t) CM::Disabled
-            & ~CAP; // 0 = compare mode
+            & ~registers::masks::CAP; // 0 = compare mode
 
         if(enable_interrupts)
-            settings |= CCIE;
+            settings |= registers::masks::CCIE;
 
         *CCCTL[instance] = settings;
 

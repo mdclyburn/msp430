@@ -16,48 +16,52 @@ namespace mardev::msp430::clock
         volatile uint8_t* const BCSCTL1 = (volatile uint8_t* const) 0x0057;
         volatile uint8_t* const BCSCTL2 = (volatile uint8_t* const) 0x0058;
         volatile uint8_t* const BCSCTL3 = (volatile uint8_t* const) 0x0053;
+
+        namespace masks
+        {
+            // BCSCTL1
+            const uint8_t XT2OFF  = 0b10000000;
+            const uint8_t XTS     = 0b01000000;
+            const uint8_t DIVAx   = 0b00110000;
+
+            // BCSCTL2
+            const uint8_t SELS    = 0b00001000;
+            const uint8_t DIVSx   = 0b00000110;
+            const uint8_t LFXT1Sx = 0b00110000;
+        }
     }
-
-    const uint8_t BCSCTL1_XT2OFF  = 0x80;
-    const uint8_t BCSCTL1_XTS     = 0x40;
-    const uint8_t BCSCTL1_DIVAx   = 0x30;
-
-    const uint8_t BCSCTL2_SELS    = 0x08;
-    const uint8_t BCSCTL2_DIVSx   = 0x06;
-
-    const uint8_t BCSCTL3_LFXT1Sx = 0x30;
 
     /** Divider for ACLK (BCSCTL1) */
     enum class DIVAx : uint8_t
     {
-        D1 = 0x00, // /1
-        D2 = 0x10, // /2
-        D3 = 0x20, // /4
-        D4 = 0x30  // /8
+        D1 = 0b00000000, // /1
+        D2 = 0b00010000, // /2
+        D3 = 0b00100000, // /4
+        D4 = 0b00110000  // /8
     };
 
     /** Sub-system master clock select (BCSCTL2) */
     enum class SELS : uint8_t
     {
-        DCOCLK     = 0x00, // Source from DCO.
-        XT2_LFXT1S = 0x01  // XT2CLK if XT2 osc., otherwise, whatever LFXT1S selects.
+        DCOCLK     = 0b00000000, // Source from DCO.
+        XT2_LFXT1S = 0b00000001  // XT2CLK if XT2 osc., otherwise, whatever LFXT1S selects.
     };
 
     /** Sub-system master clock divider (BCSCTL2) */
     enum class DIVS : uint8_t
     {
-        D1 = 0x00,
-        D2 = 0x02,
-        D4 = 0x04,
-        D8 = 0x06
+        D1 = 0b00000000,
+        D2 = 0b00000010,
+        D4 = 0b00000100,
+        D8 = 0b00000110
     };
 
     /** Low-frequency clock select (BCSCTL3) */
     enum class LFXT1S : uint8_t
     {
-        Crystal32768 = 0x00, // Crystal on LFXT1
-        VLOCLK       = 0x20, // VLOCLK, low-frequency oscillator
-        External     = 0x30  // Digital, external clock source
+        Crystal32768 = 0b00000000, // Crystal on LFXT1
+        VLOCLK       = 0b00100000, // VLOCLK, low-frequency oscillator
+        External     = 0b00110000  // Digital, external clock source
     };
 
     /** Calibration data addresses for the DCO and BCS+.
@@ -94,7 +98,7 @@ namespace mardev::msp430::clock
     {
         *registers::BCSCTL2 =
             *registers::BCSCTL2
-            & ~BCSCTL2_SELS
+            & ~registers::masks::SELS
             | ((uint8_t) source);
     }
 
@@ -106,7 +110,7 @@ namespace mardev::msp430::clock
     {
         *registers::BCSCTL2 =
             *registers::BCSCTL2
-            & ~BCSCTL2_DIVSx
+            & ~registers::masks::DIVSx
             | ((uint8_t) divider);
     }
 
@@ -130,7 +134,7 @@ namespace mardev::msp430::clock
     {
         *registers::BCSCTL3 =
             *registers::BCSCTL3
-            & ~BCSCTL3_LFXT1Sx
+            & ~registers::masks::LFXT1Sx
             | ((uint8_t) source);
     }
 
@@ -142,7 +146,7 @@ namespace mardev::msp430::clock
     {
         *registers::BCSCTL1 =
             *registers::BCSCTL1
-            & ~BCSCTL1_DIVAx
+            & ~registers::masks::DIVAx
             | ((uint8_t) divider);
     }
 

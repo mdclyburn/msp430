@@ -60,18 +60,18 @@ namespace mardev::msp430::usci::uart
     /** Asynchronous USCI mode select */
     enum class UCMODE : uint8_t
     {
-        UART                     = 0x00,
-        IdleLineMultiprocessor   = 0x01 << 1,
-        AddressBitMultiprocessor = 0x02 << 1,
-        UARTAutoBaud             = 0x03 << 1
+        UART                     = 0b00000000,
+        IdleLineMultiprocessor   = 0b00000010,
+        AddressBitMultiprocessor = 0b00000100,
+        UARTAutoBaud             = 0b00000110
     };
 
     /** USCI clock source select */
     enum class UCSSELx : uint8_t
     {
-        UCLK  = 0x00,
-        ACLK  = 0x01 << 6,
-        SMCLK = 0x02 << 6
+        UCLK  = 0b00000000,
+        ACLK  = 0b01000000,
+        SMCLK = 0b10000000
     };
 
     // Mapping module -> pin number
