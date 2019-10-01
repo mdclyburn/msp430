@@ -46,6 +46,16 @@ namespace mardev::msp430::interrupt
 
     // Reset
     const uint16_t* const reset = (uint16_t* const) 0xFFFC;
+
+    /** Enable general interrupts.
+     */
+    inline void enable() { __asm__ __volatile__ ("eint"); }
+
+    /** Disable general interrupts.
+     *
+     * This function incurs a NOP after disabling interrupts to better protect against an emergent interrupt.
+     */
+    inline void disable() { __asm__ __volatile__ ("dint { nop"); }
 }
 
 #endif
