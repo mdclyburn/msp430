@@ -117,6 +117,14 @@ namespace mardev::msp430::digital_io
         set_pin_mode(pin_number, direction, Function::IO);
     }
 
+    /** Enable or disable pin's internal resistor.
+     *
+     * \param pin_number Pin number.
+     * \param enabled Whether the internal resistor is enabled.
+     */
+    void configure_resistor(const uint8_t pin_number,
+                            bool enabled);
+
     /** Read the digital signal on a pin.
      *
      * \param pin_number Pin number.

@@ -69,12 +69,6 @@ namespace mardev::msp430::digital_io
         else
             *port_direction[port] &= ~port_mask;
 
-        // Enable the internal resistor.
-        if(direction != IO::Output)
-            *port_resistor_enable[port] |= port_mask;
-        else
-            *port_resistor_enable[port] &= ~port_mask;
-
         // Set pin function.
         switch(func)
         {
@@ -95,6 +89,19 @@ namespace mardev::msp430::digital_io
             *port_select_2[port] |= port_mask;
             break;
         }
+
+        return;
+    }
+
+    void configure_resistor(const uint8_t pin_number, bool enabled)
+    {
+        const uint8_t port = get_pin_port(pin_number);
+        const uint8_t mask = get_pin_port_mask(pin_number);
+
+        if(enabled)
+            *port_resistor_enable[port] |= mask;
+        else
+            *port_resistor_enable[port] &= ~mask;
 
         return;
     }
