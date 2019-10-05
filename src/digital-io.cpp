@@ -8,7 +8,7 @@ namespace mardev::msp430::digital_io
     volatile uint8_t* const port_direction[]        = { registers::P1DIR,  registers::P2DIR };
     volatile uint8_t* const port_interrupt_flag[]   = { registers::P1IFG,  registers::P2IFG };
     volatile uint8_t* const port_interrupt_edge[]   = { registers::P1IES,  registers::P2IES };
-    volatile uint8_t* const port_interrupt_enable[] = { registers::P1IE,   registers::P2IES };
+    volatile uint8_t* const port_interrupt_enable[] = { registers::P1IE,   registers::P2IE };
     volatile uint8_t* const port_select[]           = { registers::P1SEL,  registers::P2SEL };
     volatile uint8_t* const port_select_2[]         = { registers::P1SEL2, registers::P2SEL2 };
     volatile uint8_t* const port_resistor_enable[]  = { registers::P1REN,  registers::P2REN };
