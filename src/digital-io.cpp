@@ -48,12 +48,12 @@ namespace mardev::msp430::digital_io
                       const IO direction,
                       const Function func)
     {
-        // Guard against not-a-pin.
-        if(pin_port[pin_number-1] == 0)
+        const uint8_t port = get_pin_port(pin_number);
+        if(port == 0) // Guard against not-a-pin.
+        {
             return;
-
-        const uint8_t port = pin_port[pin_number-1] - 1;
-        const uint8_t port_mask = pin_port_mask[pin_number-1];
+        }
+        const uint8_t port_mask = get_pin_port_mask(pin_number);
 
         if(port_mask == 0)
         {
@@ -101,14 +101,14 @@ namespace mardev::msp430::digital_io
 
     bool read(const uint8_t pin_number)
     {
-        return *port_input[pin_port[pin_number]] &= pin_port_mask[pin_number];
+        return *port_input[get_pin_port(pin_number)] &= get_pin_port_mask(pin_number);
     }
 
     void write(const uint8_t pin_number,
                const Logic level)
     {
-        const uint8_t port = pin_port[pin_number-1] - 1;
-        const uint8_t port_mask = pin_port_mask[pin_number-1];
+        const uint8_t port = get_pin_port(pin_number);
+        const uint8_t port_mask = get_pin_port_mask(pin_number);
         if(level == Logic::High)
             *port_output[port] |= port_mask;
         else

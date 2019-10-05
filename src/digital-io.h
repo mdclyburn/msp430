@@ -74,6 +74,28 @@ namespace mardev::msp430::digital_io
         Low
     };
 
+    /** Return port number mapping index for a pin.
+     *
+     * Returns the index of the port number in the pin to port number mapping.
+     *
+     * \param pin_number Pin number.
+     */
+    inline uint8_t get_pin_port(const uint8_t pin_number)
+    {
+        return pin_port[pin_number-1] - 1;
+    }
+
+    /** Return the port mask mapping index for a pin.
+     *
+     * Returns the index of the port mask in the pin to port mask mapping.
+     *
+     * \param pin_number Pin number.
+     */
+    inline uint8_t get_pin_port_mask(const uint8_t pin_number)
+    {
+        return  pin_port_mask[pin_number-1];
+    }
+
     /** Set the mode for a pin.
      *
      * \param pin_number Pin number.
