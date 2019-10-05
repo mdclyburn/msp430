@@ -123,7 +123,21 @@ namespace mardev::msp430::digital_io
      * \param enabled Whether the internal resistor is enabled.
      */
     void configure_resistor(const uint8_t pin_number,
-                            bool enabled);
+                            const bool enabled);
+
+    /** Enable interrupts for a pin.
+     *
+     * \param pin_number Pin number.
+     * \param Edge select; Logic::High is triggered on a rising edge, Logic::Low on a falling edge
+     */
+    void enable_interrupts(const uint8_t pin_number,
+                           const Logic trigger);
+
+    /** Disable interrupts for a pin.
+     *
+     * \param pin_number Pin number.
+     */
+    void disable_interrupts(const uint8_t pin_number);
 
     /** Read the digital signal on a pin.
      *

@@ -93,7 +93,7 @@ namespace mardev::msp430::digital_io
         return;
     }
 
-    void configure_resistor(const uint8_t pin_number, bool enabled)
+    void configure_resistor(const uint8_t pin_number, const bool enabled)
     {
         const uint8_t port = get_pin_port(pin_number);
         const uint8_t mask = get_pin_port_mask(pin_number);
@@ -102,6 +102,31 @@ namespace mardev::msp430::digital_io
             *port_resistor_enable[port] |= mask;
         else
             *port_resistor_enable[port] &= ~mask;
+
+        return;
+    }
+
+    void enable_interrupts(const uint8_t pin_number, const Logic trigger)
+    {
+        const uint8_t port = get_pin_port(pin_number);
+        const uint8_t mask = get_pin_port_mask(pin_number);
+
+        if(trigger == Logic::Low) // Falling edge.
+            *port_interrupt_edge[port] |= mask;
+        else
+            *port_interrupt_edge[port] &= ~mask;
+
+        *port_interrupt_enable[port] |= mask;
+
+        return;
+    }
+
+    void disable_interrupts(const uint8_t pin_number)
+    {
+        const uint8_t port = get_pin_port(pin_number);
+        const uint8_t mask = get_pin_port_mask(pin_number);
+
+        *port_interrupt_enable[port] &= ~mask;
 
         return;
     }
