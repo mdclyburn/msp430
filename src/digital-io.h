@@ -128,7 +128,7 @@ namespace mardev::msp430::digital_io
     /** Enable interrupts for a pin.
      *
      * \param pin_number Pin number.
-     * \param Edge select; Logic::High is triggered on a rising edge, Logic::Low on a falling edge
+     * \param trigger Edge select; Logic::High is triggered on a rising edge, Logic::Low on a falling edge
      */
     void enable_interrupts(const uint8_t pin_number,
                            const Logic trigger);
