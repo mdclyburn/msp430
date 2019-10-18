@@ -56,6 +56,13 @@ namespace mardev::msp430::interrupt
      * This function incurs a NOP after disabling interrupts to better protect against an emergent interrupt.
      */
     inline void disable() { __asm__ __volatile__ ("dint { nop"); }
+
+    /** Return from an interrupt service routine.
+     *
+     * Uses the RETI instruction to restore CPU registers' states (SP, PC, as well as the SR).
+     * This should be preferred over using a lone `return' statement to restore the status register.
+     */
+    inline void return_from_interrupt() { __asm__ __volatile__ ("reti"); }
 }
 
 #endif
