@@ -60,8 +60,10 @@ namespace mardev::msp430::interrupt
     /** Return from an interrupt service routine.
      *
      * Uses the RETI instruction to restore CPU registers' states (SP, PC, as well as the SR).
-     * This should be preferred over using a lone `return' statement to restore the status register.
+     * This should be preferred over using a lone `return' statement to restore the status register,
+     * but not more than getting GCC to generate the RETI by marking the function with the 'interrupt' attribute.
      */
+    __attribute__((always_inline))
     inline void return_from_interrupt() { __asm__ __volatile__ ("reti"); }
 }
 
