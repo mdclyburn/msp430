@@ -49,10 +49,6 @@ namespace mardev::msp430::digital_io
                       const Function func)
     {
         const uint8_t port = get_pin_port(pin_number);
-        if(port == 0) // Guard against not-a-pin.
-        {
-            return;
-        }
         const uint8_t port_mask = get_pin_port_mask(pin_number);
 
         if(port_mask == 0)
@@ -60,7 +56,7 @@ namespace mardev::msp430::digital_io
             /** Sanity check against incorrect pin number to port mask mapping.
              * Something is wrong with the library code if this gets hit.
              */
-            return;
+            while(true);
         }
 
         // Set input or output.
