@@ -81,7 +81,7 @@ namespace mardev::msp430::timer
         for(uint16_t i = 0; i < counts; i++)
         {
             start(MC::Up, source, ID::D1);
-            while(*registers::TAR < 32768);
+            while(*registers::TAR < ticks_per_count);
             reset();
         }
 

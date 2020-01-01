@@ -161,6 +161,11 @@ namespace mardev::msp430::clock
         set_auxiliary_source(source);
         set_auxiliary_divider(divider);
     }
+
+    inline bool lfxt1_oscillator_fault()
+    {
+        return *registers::BCSCTL3 & 1;
+    }
 }
 
 #endif
