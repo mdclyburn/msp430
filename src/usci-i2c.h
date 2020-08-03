@@ -40,7 +40,7 @@ namespace mardev::msp430::usci::i2c
             // UCBxSTAT status register
             const uint8_t UCSCLLOW  = 0b01000000;
             const uint8_t UCGC      = 0b00100000;
-            const uint8_t UCBBUSTY  = 0b00010000;
+            const uint8_t UCBBUSY  = 0b00010000;
             const uint8_t UCNACKIFG = 0b00001000;
             const uint8_t UCSTPIFG  = 0b00000100;
             const uint8_t UCSTTIFG  = 0b00000010;
@@ -104,61 +104,77 @@ namespace mardev::msp430::usci::i2c
      */
     inline void set_baud_control(const uint16_t val)
     {
-        *UCB0BR0 = val & 0xFF;
-        *UCB0BR1 = val >> 8;
+        *usci::registers::UCB0BR0 = val & 0xFF;
+        *usci::registers::UCB0BR1 = val >> 8;
 
         return;
     }
 
     void __send_signal(const uint8_t signal_mask);
 
-    /** Synchronously send a NACK.
-     */
-    inline void nack() { __send_signal(registers::masks::UCTXNACK); }
+    inline void __nack() { __send_signal(registers::masks::UCTXNACK); }
 
-    /** Synchronously send a STOP condition.
-     */
-    inline void stop() { __send_signal(registers::masks::UCTXSTP); }
+    inline void __stop() { __send_signal(registers::masks::UCTXSTP); }
 
-    /** Synchronously send a START condition.
-     */
-    inline void start() { __send_signal(registers::masks::UCTXSTT); }
+    inline void __start() { __send_signal(registers::masks::UCTXSTT); }
 
     /** Returns true if the I2C clock signal is held low.
      */
-    inline bool clock_is_low() { return *registers::UCB0STAT & registers::masks::UCSCLLOW; }
+    inline bool clock_is_low() { return *usci::registers::UCB0STAT & registers::masks::UCSCLLOW; }
 
     /** Returns true if the general call address is received.
      */
-    inline bool general_addr_called() { return *registers::UCB0STAT & registers::masks::UCGC; }
+    inline bool general_addr_called() { return *usci::registers::UCB0STAT & registers::masks::UCGC; }
 
     /** Returns true if the I2C bus is busy.
      */
-    inline bool is_busy() { return *registers::UCB0STAT & registers::masks::UCBUSY; }
+    inline bool is_busy() { return *usci::registers::UCB0STAT & registers::masks::UCBBUSY; }
 
     /** Returns true if a NACK was received.
      */
-    inline bool nack_received() { return *registers::UCB0STAT & registers::masks::UCNACKIFG; }
+    inline bool nack_received() { return *usci::registers::UCB0STAT & registers::masks::UCNACKIFG; }
 
     /** Returns true if a stop condition was received.
      */
-    inline bool stop_received() { return *registers::UCB0STAT & registers::masks::UCSTPIFG; }
+    inline bool stop_received() { return *usci::registers::UCB0STAT & registers::masks::UCSTPIFG; }
 
     /** Returns true if a start condition was received.
      */
-    inline bool start_received() { return *registers::UCB0STAT & registers::masks::UCSTTIFG; }
+    inline bool start_received() { return *usci::registers::UCB0STAT & registers::masks::UCSTTIFG; }
 
     /** Returns true if arbitration process was lost.
      */
-    inline bool arbitration_lost() { return *registers::UCB0STAT & registers::masks::UCALIFG; }
+    inline bool arbitration_lost() { return *usci::registers::UCB0STAT & registers::masks::UCALIFG; }
 
-    /** Returns the data received from the I2C bus.
+    void __send(const uint8_t* const buffer, const uint8_t length);
+
+    /** Send data over the I2C bus.
+     *
+     * \param address 7-bit address of the peripheral to write to.
+     * \param buffer Data to be written.
+     * \param length Size of buffer to be written.
      */
-    inline uint8_t receive() { return *registers::UCB0RXBUF; }
+    inline void write(const uint8_t address,
+                      const uint8_t* const buffer,
+                      const uint8_t length)
+    {
+        *registers::UCB0I2CSA = address;
+        __send(buffer, length);
+    }
 
-    /**
+    /** Send data over the I2C bus (with 10-bit addressing).
+     *
+     * \param address 10-bit address of the peripheral to write to.
+     * \param buffer Data to be written.
+     * \param length Size of buffer to be written.
      */
-
+    inline void write10(const uint16_t address,
+                        const uint8_t* const buffer,
+                        const uint8_t length)
+    {
+        *registers::UCB0I2CSA = address;
+        __send(buffer, length);
+    }
 }
 
 #endif
