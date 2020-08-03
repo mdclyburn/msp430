@@ -98,6 +98,18 @@ namespace mardev::msp430::usci::i2c
         return;
     }
 
+    /** Set the divider for the bit clock.
+     *
+     * \param val Bit clock prescaler value.
+     */
+    inline void set_baud_control(const uint16_t val)
+    {
+        *UCB0BR0 = val & 0xFF;
+        *UCB0BR1 = val >> 8;
+
+        return;
+    }
+
     void __send_signal(const uint8_t signal_mask);
 
     /** Synchronously send a NACK.
@@ -111,6 +123,42 @@ namespace mardev::msp430::usci::i2c
     /** Synchronously send a START condition.
      */
     inline void start() { __send_signal(registers::masks::UCTXSTT); }
+
+    /** Returns true if the I2C clock signal is held low.
+     */
+    inline bool clock_is_low() { return *registers::UCB0STAT & registers::masks::UCSCLLOW; }
+
+    /** Returns true if the general call address is received.
+     */
+    inline bool general_addr_called() { return *registers::UCB0STAT & registers::masks::UCGC; }
+
+    /** Returns true if the I2C bus is busy.
+     */
+    inline bool is_busy() { return *registers::UCB0STAT & registers::masks::UCBUSY; }
+
+    /** Returns true if a NACK was received.
+     */
+    inline bool nack_received() { return *registers::UCB0STAT & registers::masks::UCNACKIFG; }
+
+    /** Returns true if a stop condition was received.
+     */
+    inline bool stop_received() { return *registers::UCB0STAT & registers::masks::UCSTPIFG; }
+
+    /** Returns true if a start condition was received.
+     */
+    inline bool start_received() { return *registers::UCB0STAT & registers::masks::UCSTTIFG; }
+
+    /** Returns true if arbitration process was lost.
+     */
+    inline bool arbitration_lost() { return *registers::UCB0STAT & registers::masks::UCALIFG; }
+
+    /** Returns the data received from the I2C bus.
+     */
+    inline uint8_t receive() { return *registers::UCB0RXBUF; }
+
+    /**
+     */
+
 }
 
 #endif
