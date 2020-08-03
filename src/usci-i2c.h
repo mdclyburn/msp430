@@ -1,3 +1,8 @@
+/** @file
+ * Universal Serial Communication Interface - I2C
+ *
+ */
+
 #ifndef MDL_MSP430_USCII2C_H
 #define MDL_MSP430_USCII2C_H
 
@@ -11,8 +16,8 @@ namespace mardev::msp430::usci::i2c
 
     namespace registers
     {
-        const uint16_t* UCB0I2COA = (const uint16_t*) 0x0118;
-        const uint16_t* UCB0I2CSA = (const uint16_t*) 0x011A;
+        volatile uint16_t* const UCB0I2COA = (volatile uint16_t* const) 0x0118;
+        volatile uint16_t* const UCB0I2CSA = (volatile uint16_t* const) 0x011A;
 
         namespace masks
         {
@@ -42,6 +47,70 @@ namespace mardev::msp430::usci::i2c
             const uint8_t UCALIFG   = 0b00000001;
         }
     }
+
+    enum class UCSSEL : uint8_t
+    {
+        UCLKI = 0,
+        ACLK  = 1,
+        SMCLK = 2
+    };
+
+    /** Reset the UCB0 module.
+     */
+    inline void reset()
+    {
+        *usci::registers::UCB0CTL0 |= registers::masks::UCSWRST;
+        return;
+    }
+
+    /** Enable the UCB0 module for I2C.
+     */
+    inline void enable()
+    {
+        *usci::registers::UCB0CTL0 ^= 0b110;
+        return;
+    }
+
+    /** Set the clock source.
+     */
+    inline void set_clock_source(const UCSSEL source)
+    {
+        *usci::registers::UCB0CTL1 =
+            (*usci::registers::UCB0CTL1 ^ registers::masks::UCSSEL)
+            | (uint8_t) source;
+
+        return;
+    }
+
+    /** Use I2C transmitter mode.
+     */
+    inline void set_transmitter_mode()
+    {
+        *usci::registers::UCB0CTL1 |= registers::masks::UCTR;
+        return;
+    }
+
+    /** Use I2C receiver mode.
+     */
+    inline void set_receiver_mode()
+    {
+        *usci::registers::UCB0CTL1 ^= registers::masks::UCTR;
+        return;
+    }
+
+    void __send_signal(const uint8_t signal_mask);
+
+    /** Synchronously send a NACK.
+     */
+    inline void nack() { __send_signal(registers::masks::UCTXNACK); }
+
+    /** Synchronously send a STOP condition.
+     */
+    inline void stop() { __send_signal(registers::masks::UCTXSTP); }
+
+    /** Synchronously send a START condition.
+     */
+    inline void start() { __send_signal(registers::masks::UCTXSTT); }
 }
 
 #endif

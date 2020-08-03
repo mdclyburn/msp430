@@ -19,6 +19,7 @@ objects = \
 	digital-io.o \
 	timer.o \
 	usci.o \
+	usci-i2c.o \
 	usci-spi.o \
 	usci-uart.o \
 	watchdog.o
@@ -31,6 +32,8 @@ digital-io.o:
 timer.o:
 
 usci.o:
+
+usci-i2c.o:
 
 usci-spi.o:
 
