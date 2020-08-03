@@ -12,14 +12,35 @@ namespace mardev::msp430::usci::i2c
         return;
     }
 
-    void __send(const uint8_t* const buffer,
-                const uint8_t length)
+    void read_begin()
     {
-        for(uint8_t i = 0; i < length; i++)
-        {
-            *usci::registers::UCB0TXBUF = buffer[i];
-            // TODO: transmission error handling
-            while(!(*interrupt::registers::IFG2 & usci::registers::masks::UCB0TXIFG));
-        }
+        set_receiver_mode();
+        start();
+
+        return;
+    }
+
+    uint8_t read()
+    {
+        while(!(*interrupt::registers::IFG2
+                & usci::registers::masks::UCB0RXIFG));
+        return *usci::registers::UCB0RXBUF;
+    }
+
+    void write_begin()
+    {
+        set_transmitter_mode();
+        start();
+
+        return;
+    }
+
+    void write(const uint8_t data)
+    {
+        *usci::registers::UCB0TXBUF = data;
+        while(!(*interrupt::registers::IFG2
+                & usci::registers::masks::UCB0TXIFG));
+
+        return;
     }
 }

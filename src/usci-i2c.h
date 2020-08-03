@@ -110,13 +110,25 @@ namespace mardev::msp430::usci::i2c
         return;
     }
 
+    inline void set_periph_address(const uint8_t address)
+    {
+        *usci::registers::UCB0CTL0 ^= registers::masks::UCSLA10;
+        *registers::UCB0I2CSA = address;
+    }
+
+    inline void set_periph_address10(const uint16_t address)
+    {
+        *usci::registers::UCB0CTL0 |= registers::masks::UCSLA10;
+        *registers::UCB0I2CSA = address;
+    }
+
     void __send_signal(const uint8_t signal_mask);
 
     inline void __nack() { __send_signal(registers::masks::UCTXNACK); }
 
-    inline void __stop() { __send_signal(registers::masks::UCTXSTP); }
+    inline void stop() { __send_signal(registers::masks::UCTXSTP); }
 
-    inline void __start() { __send_signal(registers::masks::UCTXSTT); }
+    inline void start() { __send_signal(registers::masks::UCTXSTT); }
 
     /** Returns true if the I2C clock signal is held low.
      */
@@ -146,35 +158,33 @@ namespace mardev::msp430::usci::i2c
      */
     inline bool arbitration_lost() { return *usci::registers::UCB0STAT & registers::masks::UCALIFG; }
 
-    void __send(const uint8_t* const buffer, const uint8_t length);
-
-    /** Send data over the I2C bus.
+    /** Start a read from a peripheral.
      *
-     * \param address 7-bit address of the peripheral to write to.
-     * \param buffer Data to be written.
-     * \param length Size of buffer to be written.
+     * The peripheral address needs to be set with set_periph_address() or set_periph_address10() before calling this function.
      */
-    inline void write(const uint8_t address,
-                      const uint8_t* const buffer,
-                      const uint8_t length)
-    {
-        *registers::UCB0I2CSA = address;
-        __send(buffer, length);
-    }
+    void read_begin();
 
-    /** Send data over the I2C bus (with 10-bit addressing).
+    /** Read a byte from the peripheral.
      *
-     * \param address 10-bit address of the peripheral to write to.
-     * \param buffer Data to be written.
-     * \param length Size of buffer to be written.
+     * Synchronously reads a byte from the peripheral.
+     * A read must have been started with read_begin() before calling this function.
+     *
+     * \returns Byte read from the peripheral.
      */
-    inline void write10(const uint16_t address,
-                        const uint8_t* const buffer,
-                        const uint8_t length)
-    {
-        *registers::UCB0I2CSA = address;
-        __send(buffer, length);
-    }
+    uint8_t read();
+
+    /** Start a write to a peripheral.
+     *
+     * The peripheral address needs to be set with set_periph_address() or set_periph_address10() before calling this function.
+     */
+    void write_begin();
+
+    /** Write a byte to the peripheral.
+     *
+     * Synchronously writes a byte to the peripheral.
+     * A write must have been started with write_begin() before calling this function.
+     */
+    void write(const uint8_t data);
 }
 
 #endif
