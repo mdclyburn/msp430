@@ -6,47 +6,43 @@ namespace mardev::msp430::usci::i2c
 
     bool read_begin()
     {
-        // Set receive mode and generate the start condition.
-        *usci::registers::UCB0CTL1 ^= registers::masks::UCTR;
+        __rx_mode();
         __start();
+        while(__generating_start());
 
-        // Wait to be ACKed or NACKed.
-        while(*usci::registers::UCB0CTL1 & registers::masks::UCTXSTT);
-
-        // Read starts without any other intervention.
+        // Reception starts without any other intervention.
         // Checking UCTXNACK will discern an issue with communication.
-        if(*usci::registers::UCB0STAT ^ registers::masks::UCNACKIFG)
-        {
-            return true;
-        }
-        else
+        if(__nack_received())
         {
             __stop();
             return false;
+        }
+        else
+        {
+            return true;
         }
     }
 
     uint8_t read()
     {
-        while(!(*interrupt::registers::IFG2
-                & usci::registers::masks::UCB0RXIFG));
+        while(!__rx_buffer_full());
         return *usci::registers::UCB0RXBUF;
     }
 
     uint8_t read_end()
     {
         __stop();
-        return *usci::registers::UCB0RXBUF;
+        return read();
     }
 
     bool write_begin()
     {
         // Set transmit mode and generate the start condition.
-        *usci::registers::UCB0CTL1 |= registers::masks::UCTR;
+        __tx_mode();
         __start();
 
         // Wait to be ACKed or NACKed.
-        while(*usci::registers::UCB0CTL1 & registers::masks::UCTXSTT);
+        while(__generating_start());
 
         if(*interrupt::registers::IFG2 & usci::registers::masks::UCB0TXIFG)
         {
@@ -62,8 +58,7 @@ namespace mardev::msp430::usci::i2c
     void write(const uint8_t data)
     {
         *usci::registers::UCB0TXBUF = data;
-        while(!(*interrupt::registers::IFG2
-                & usci::registers::masks::UCB0TXIFG));
+        while(!__tx_buffer_empty());
 
         return;
     }

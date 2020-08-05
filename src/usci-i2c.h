@@ -131,35 +131,57 @@ namespace mardev::msp430::usci::i2c
      */
     inline void __stop() { __send_signal(registers::masks::UCTXSTP); }
 
+    /** Issue a start condition.
+     */
     inline void __start() { __send_signal(registers::masks::UCTXSTT); }
+
+    /** Change to transmitter mode.
+     */
+    inline void __tx_mode() { *usci::registers::UCB0CTL1 |= registers::masks::UCTR; }
+
+    /** Change to receiver mode.
+     */
+    inline void __rx_mode() { *usci::registers::UCB0CTL1 ^= registers::masks::UCTR; }
 
     /** Returns true if the I2C clock signal is held low.
      */
-    inline bool clock_is_low() { return *usci::registers::UCB0STAT & registers::masks::UCSCLLOW; }
+    inline bool __clock_is_low() { return *usci::registers::UCB0STAT & registers::masks::UCSCLLOW; }
 
     /** Returns true if the general call address is received.
      */
-    inline bool general_addr_called() { return *usci::registers::UCB0STAT & registers::masks::UCGC; }
+    inline bool __general_addr_called() { return *usci::registers::UCB0STAT & registers::masks::UCGC; }
 
     /** Returns true if the I2C bus is busy.
      */
-    inline bool is_busy() { return *usci::registers::UCB0STAT & registers::masks::UCBBUSY; }
+    inline bool __is_busy() { return *usci::registers::UCB0STAT & registers::masks::UCBBUSY; }
 
     /** Returns true if a NACK was received.
      */
-    inline bool nack_received() { return *usci::registers::UCB0STAT & registers::masks::UCNACKIFG; }
+    inline bool __nack_received() { return *usci::registers::UCB0STAT & registers::masks::UCNACKIFG; }
 
     /** Returns true if a stop condition was received.
      */
-    inline bool stop_received() { return *usci::registers::UCB0STAT & registers::masks::UCSTPIFG; }
+    inline bool __stop_received() { return *usci::registers::UCB0STAT & registers::masks::UCSTPIFG; }
 
     /** Returns true if a start condition was received.
      */
-    inline bool start_received() { return *usci::registers::UCB0STAT & registers::masks::UCSTTIFG; }
+    inline bool __start_received() { return *usci::registers::UCB0STAT & registers::masks::UCSTTIFG; }
 
     /** Returns true if arbitration process was lost.
      */
-    inline bool arbitration_lost() { return *usci::registers::UCB0STAT & registers::masks::UCALIFG; }
+    inline bool __arbitration_lost() { return *usci::registers::UCB0STAT & registers::masks::UCALIFG; }
+
+    /** Returns true if the start condition is being generated.
+     */
+    inline bool __generating_start() { return *usci::registers::UCB0CTL1 & registers::masks::UCTXSTT; }
+
+    /** Returns true if the transmission buffer is empty.
+     */
+    inline bool __tx_buffer_empty() { return *interrupt::registers::IFG2 & usci::registers::masks::UCB0TXIFG; }
+
+    /** Returns true if the reception buffer is holding a byte.
+     */
+    inline bool __rx_buffer_full() { return *interrupt::registers::IFG2 & usci::registers::masks::UCB0RXIFG; }
 
     /** Start a read from a peripheral.
      *
