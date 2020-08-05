@@ -123,13 +123,15 @@ namespace mardev::msp430::usci::i2c
         *registers::UCB0I2CSA = address;
     }
 
-    void __send_signal(const uint8_t signal_mask);
+    inline void __send_signal(const uint8_t signal_mask) { *usci::registers::UCB0CTL1 |= signal_mask; }
 
     inline void __nack() { __send_signal(registers::masks::UCTXNACK); }
 
-    inline void stop() { __send_signal(registers::masks::UCTXSTP); }
+    /** Issue a stop condition.
+     */
+    inline void __stop() { __send_signal(registers::masks::UCTXSTP); }
 
-    inline void start() { __send_signal(registers::masks::UCTXSTT); }
+    inline void __start() { __send_signal(registers::masks::UCTXSTT); }
 
     /** Returns true if the I2C clock signal is held low.
      */
@@ -161,9 +163,12 @@ namespace mardev::msp430::usci::i2c
 
     /** Start a read from a peripheral.
      *
-     * The peripheral address needs to be set with set_periph_address() or set_periph_address10() before calling this function.
+     * The peripheral address needs to be set prior.
+     * See set_periph_address() or set_periph_address10().
+     *
+     * \returns True if reception is ready to begin.
      */
-    void read_begin();
+    bool read_begin();
 
     /** Read a byte from the peripheral.
      *
@@ -174,11 +179,21 @@ namespace mardev::msp430::usci::i2c
      */
     uint8_t read();
 
+    /** End a read from a peripheral.
+     *
+     * Generates a stop condition to end a read.
+     * \returns The last byte read from the peripheral.
+     */
+    uint8_t read_end();
+
     /** Start a write to a peripheral.
      *
-     * The peripheral address needs to be set with set_periph_address() or set_periph_address10() before calling this function.
+     * The peripheral address needs to be set.
+     * See set_periph_address() and set_periph_address10().
+     *
+     * \returns True if transmission is ready to begin.
      */
-    void write_begin();
+    bool write_begin();
 
     /** Write a byte to the peripheral.
      *
@@ -186,6 +201,10 @@ namespace mardev::msp430::usci::i2c
      * A write must have been started with write_begin() before calling this function.
      */
     void write(const uint8_t data);
+
+    /** End a write from a peripheral.
+     */
+    inline void write_end() { __stop(); }
 }
 
 #endif

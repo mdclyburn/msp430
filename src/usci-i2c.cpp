@@ -4,20 +4,26 @@ namespace mardev::msp430::usci::i2c
 {
     namespace usci = mardev::msp430::usci;
 
-    void __send_signal(const uint8_t signal_mask)
+    bool read_begin()
     {
-        *usci::registers::UCB0CTL1 |= signal_mask;
-        while(*usci::registers::UCB0CTL1 & signal_mask);
-
-        return;
-    }
-
-    void read_begin()
-    {
+        // Set receive mode and generate the start condition.
         *usci::registers::UCB0CTL1 ^= registers::masks::UCTR;
-        start();
+        __start();
 
-        return;
+        // Wait to be ACKed or NACKed.
+        while(*usci::registers::UCB0CTL1 & registers::masks::UCTXSTT);
+
+        // Read starts without any other intervention.
+        // Checking UCTXNACK will discern an issue with communication.
+        if(*usci::registers::UCB0STAT ^ registers::masks::UCNACKIFG)
+        {
+            return true;
+        }
+        else
+        {
+            __stop();
+            return false;
+        }
     }
 
     uint8_t read()
@@ -27,12 +33,30 @@ namespace mardev::msp430::usci::i2c
         return *usci::registers::UCB0RXBUF;
     }
 
-    void write_begin()
+    uint8_t read_end()
     {
-        *usci::registers::UCB0CTL1 |= registers::masks::UCTR;
-        start();
+        __stop();
+        return *usci::registers::UCB0RXBUF;
+    }
 
-        return;
+    bool write_begin()
+    {
+        // Set transmit mode and generate the start condition.
+        *usci::registers::UCB0CTL1 |= registers::masks::UCTR;
+        __start();
+
+        // Wait to be ACKed or NACKed.
+        while(*usci::registers::UCB0CTL1 & registers::masks::UCTXSTT);
+
+        if(*interrupt::registers::IFG2 & usci::registers::masks::UCB0TXIFG)
+        {
+            return true;
+        }
+        else
+        {
+            __stop();
+            return false;
+        }
     }
 
     void write(const uint8_t data)
