@@ -94,12 +94,26 @@ namespace mardev::msp430::usci::i2c
         return;
     }
 
+    /** Set the address of the peripheral.
+     *
+     * Sets the address of the peripheral to communicate with.
+     * This should be done prior to initiating a read or write.
+     *
+     * \param address Address of the peripheral.
+     */
     inline void set_periph_address(const uint8_t address)
     {
         *usci::registers::UCB0CTL0 ^= registers::masks::UCSLA10;
         *registers::UCB0I2CSA = address;
     }
 
+    /** Set the 10-bit address of the peripheral.
+     *
+     * Sets the 10-bit address of the peripheral to communicate with.
+     * This should be done prior to inititating a read or write.
+     *
+     * \param address Address of the peripheral.
+     */
     inline void set_periph_address10(const uint16_t address)
     {
         *usci::registers::UCB0CTL0 |= registers::masks::UCSLA10;
