@@ -14,7 +14,7 @@ namespace mardev::msp430::usci::i2c
 
     void read_begin()
     {
-        set_receiver_mode();
+        *usci::registers::UCB0CTL1 ^= registers::masks::UCTR;
         start();
 
         return;
@@ -29,7 +29,7 @@ namespace mardev::msp430::usci::i2c
 
     void write_begin()
     {
-        set_transmitter_mode();
+        *usci::registers::UCB0CTL1 |= registers::masks::UCTR;
         start();
 
         return;

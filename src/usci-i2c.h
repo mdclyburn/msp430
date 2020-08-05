@@ -82,22 +82,6 @@ namespace mardev::msp430::usci::i2c
         return;
     }
 
-    /** Use I2C transmitter mode.
-     */
-    inline void set_transmitter_mode()
-    {
-        *usci::registers::UCB0CTL1 |= registers::masks::UCTR;
-        return;
-    }
-
-    /** Use I2C receiver mode.
-     */
-    inline void set_receiver_mode()
-    {
-        *usci::registers::UCB0CTL1 ^= registers::masks::UCTR;
-        return;
-    }
-
     /** Set the divider for the bit clock.
      *
      * \param val Bit clock prescaler value.
