@@ -64,11 +64,14 @@ namespace mardev::msp430::usci::i2c
     }
 
     /** Enable the UCB0 module for I2C.
+     *
+     * Readies the UCB0 module for I2C operation.
+     * All configuration should be performed prior to calling this function.
      */
     inline void enable()
     {
         *usci::registers::UCB0CTL0 ^= 0b110;
-        return;
+        *usci::registers::UCB0CTL0 ^= registers::masks::UCSWRST;
     }
 
     /** Set the clock source.
